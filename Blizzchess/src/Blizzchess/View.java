@@ -86,7 +86,7 @@ public class View extends Application {
             			turnState=1;
             			
             			//TEST1
-            		/*	gc.strokeRect(koX+50*x,koY+50*y, 50, 50);
+            			gc.strokeRect(koX+50*x,koY+50*y, 50, 50);
             			
             			for(int i=0; i<3; i++)
             			{
@@ -110,7 +110,7 @@ public class View extends Application {
             			}
             			
             			root.getChildren().add(canvas);
-            			*/
+            			
             			//ENDTEST1
             			//showMoves();
             		}
@@ -122,8 +122,8 @@ public class View extends Application {
             		board.setField(x, y, xNew, yNew);
             		
             		//TEST1
-            		//gc.clearRect(canvas.getLayoutX(),canvas.getLayoutY(), canvas.getWidth(), canvas.getHeight());
-            		//root.getChildren().remove(canvas);
+            		gc.clearRect(canvas.getLayoutX(),canvas.getLayoutY(), canvas.getWidth(), canvas.getHeight());
+            		root.getChildren().remove(canvas);
             		//ENDTEST1
             		
             		turnState=0;
