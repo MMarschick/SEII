@@ -22,7 +22,7 @@ public class View extends Application {
 	public static final CountDownLatch latch = new CountDownLatch(1);
     public static View startUpTest = null;
    
-	Piece felder[][] = new Piece[9][9];
+	
 	int turnState=0;
 	int x,y,xNew,yNew;
 	
@@ -43,25 +43,17 @@ public class View extends Application {
     public View() {
         setStartUpTest(this);
     }
-//    public static void main(String[] args) {
-//		launch(args);
-//	}
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Hello World!");
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 450, 450);
+        Board board = new Board(root);
         
-        Piece peasant = new Piece("file:C:\\Users\\Doured\\Desktop\\BlizzChess\\peasant.png");
-        felder[3][6]=peasant;
-        Image board = new Image("file:C:\\Users\\Doured\\Desktop\\BlizzChess\\board.png");
         
-        ImageView boardV = new ImageView(board);
+        root.getChildren().add(board.getIcon());
         
-        root.getChildren().add(boardV);
-        root.getChildren().add(peasant.getIcon());
-        peasant.getIcon().setX(150);
-        peasant.getIcon().setY(300);
         
         
         primaryStage.setScene(scene);
@@ -74,20 +66,19 @@ public class View extends Application {
                 switch(turnState){
                 case 0:
             		System.out.println("mouse click detected! "+event.getSource());
-            		x = (int)(event.getX()-boardV.getX())/50;
-            		y = (int)(event.getY()-boardV.getY())/50;
-            		if(isPiece(x,y)){
+            		x = (int)(event.getX()-board.getIcon().getX())/50;
+            		y = (int)(event.getY()-board.getIcon().getY())/50;
+            		if(board.isPiece(x,y)){
             			turnState=1;
             			//showMoves();
             		}
             		break;
                 case 1: 
-                	xNew= (int)(event.getX()-boardV.getX())/50;
-            		yNew = (int)(event.getY()-boardV.getY())/50;
-            		felder[x][y].getIcon().setX(xNew*50);
-            		felder[x][y].getIcon().setY(yNew*50);
-            		felder[xNew][yNew]=felder[x][y];
-            		felder[x][y]=null;
+                	
+                	xNew= (int)(event.getX()-board.getIcon().getX())/50;
+            		yNew = (int)(event.getY()-board.getIcon().getY())/50;
+            		board.setField(x, y, xNew, yNew);
+            		
             		turnState=0;
                 	break;
                 case 2: break;
@@ -105,7 +96,5 @@ public class View extends Application {
        
     }
     
-    public boolean isPiece(int x, int y){
-    	return !(felder[x][y] == null);
-    }
+
 }
