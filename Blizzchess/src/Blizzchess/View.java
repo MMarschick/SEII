@@ -52,7 +52,7 @@ public class View extends Application {
         Board board = new Board(root);
         
         
-        root.getChildren().add(board.getIcon());
+       // root.getChildren().add(board.getIcon());  Wird in Board.java verlegt
         
         
         
