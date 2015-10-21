@@ -46,7 +46,8 @@ public class View extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Hello World!");
+    	//Aufbau Grundfenster; Stage + Scene
+        primaryStage.setTitle("Blizzchess - Savants of Warcraft");
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 450, 450);
         Board board = new Board(root);
@@ -62,9 +63,10 @@ public class View extends Application {
         
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
+            //Aufbau/Kontrolle eines Spielzuges
             public void handle(MouseEvent event) {
                 switch(turnState){
-                case 0:
+                case 0: //Spieler ist in einem neuen Spielzug
             		System.out.println("mouse click detected! "+event.getSource());
             		x = (int)(event.getX()-board.getIcon().getX())/50;
             		y = (int)(event.getY()-board.getIcon().getY())/50;
@@ -73,7 +75,7 @@ public class View extends Application {
             			//showMoves();
             		}
             		break;
-                case 1: 
+                case 1: //Spieler hat ein Piece angeklickt
                 	
                 	xNew= (int)(event.getX()-board.getIcon().getX())/50;
             		yNew = (int)(event.getY()-board.getIcon().getY())/50;

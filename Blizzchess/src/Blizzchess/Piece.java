@@ -13,14 +13,15 @@ public class Piece {
 //	Movementpattern movementPattern;	
 	
 	ImageView icon;
-	Image peasant;
+	Image piece;
 	
 	
 	public Piece(String path){
-		peasant = new Image(path);
-		icon = new ImageView(peasant);
+		piece = new Image(path);
+		icon = new ImageView(piece);
 	}
 	
+	//Get-Methode fuer icon (Image) von Piece
 	public ImageView getIcon(){
 		return icon;
 	}
