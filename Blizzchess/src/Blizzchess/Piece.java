@@ -10,7 +10,14 @@ public class Piece {
 //	Alliance characterAlliance;
 //	boolean frozen, poisoned, taunt, stealth, splash, rooted, drain;
 //	Ability ability;
-//	Movementpattern movementPattern;	
+//	Movementpattern movementPattern;
+	int attackValue, hitPoints, maxHitPoints, abilityCooldown;
+	Image characterImage;
+	String charactername;
+	Alliance characterAlliance;
+	boolean frozen, poisoned, taunt, stealth, splash, rooted, drain, dead;
+	Ability ability;
+	Movementpattern movementPattern;
 	
 	ImageView icon;
 	Image piece;
@@ -43,13 +50,13 @@ public class Piece {
 		pathsE[9] = "abomination.png";
 	}
 	
-	public Piece(String pathFrakt, int pathIndex){
-		if (pathFrakt=="GOOD")
+	public Piece(Alliance pathFrakt, int pathIndex){
+		if (pathFrakt==Alliance.GOOD)
 		{
 			piece = new Image(pathsG[pathIndex]);
 			icon = new ImageView(piece);
 		}
-		if (pathFrakt=="EVIL")
+		if (pathFrakt==Alliance.EVIL)
 		{
 			piece = new Image(pathsE[pathIndex]);
 			icon = new ImageView(piece);

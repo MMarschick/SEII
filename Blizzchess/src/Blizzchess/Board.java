@@ -24,8 +24,8 @@ public class Board {
 			for (int i=0;i<9;i++)
 			{
 				//Aufbau untere Seite
-				if(j==1){pieces[i] = new Piece("GOOD", 0);}  //Reihe: Bauern
-				else {pieces[i] = new Piece("GOOD", i+1);}   //Reihe: Andere Figuren
+				if(j==1){pieces[i] = new Piece(Alliance.GOOD, 0);}  //Reihe: Bauern
+				else {pieces[i] = new Piece(Alliance.GOOD, i+1);}   //Reihe: Andere Figuren
 				root.getChildren().add(pieces[i].getIcon()); //Image von neuem Piece der Scene hinzufuegen
 				
 				//Image von Piece ausrichten
@@ -35,8 +35,8 @@ public class Board {
 				felder[i][8-j] = pieces[i]; //Piece dem Array "felder" hinzufuegen
 				
 				//Aufbau obere Seite
-				if(j==1){pieces[i+9] = new Piece("EVIL", 0);}  //Reihe: Bauern
-				else {pieces[i+9] = new Piece("EVIL", i+1);}   //Reihe: Andere Figuren
+				if(j==1){pieces[i+9] = new Piece(Alliance.EVIL, 0);}  //Reihe: Bauern
+				else {pieces[i+9] = new Piece(Alliance.EVIL, i+1);}   //Reihe: Andere Figuren
 				root.getChildren().add(pieces[i+9].getIcon()); //Image von neuem Piece der Scene hinzufuegen
 				pieces[i+9].getIcon().setRotate(180);;
 			
