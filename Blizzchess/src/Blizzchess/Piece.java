@@ -15,6 +15,7 @@ public class Piece {
 	Image characterImage;
 	String charactername;
 	Alliance characterAlliance;
+	
 	boolean frozen, poisoned, taunt, stealth, splash, rooted, drain, dead;
 	Ability ability;
 	Movementpattern movementPattern;
