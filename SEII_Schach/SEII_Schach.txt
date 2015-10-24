@@ -1,0 +1,6 @@
+Thema: Schachspiel
+Sprache: Java
+Universum: Fantasy / Blizzard / Orc-Human
+Regeln: Normale Win-Condition; andere Bewegungsmuster; mit Lebenspunkten; evtl statt 8 -> 10 Reihen
+
+
