@@ -69,6 +69,11 @@ public class Piece {
 		return icon;
 	}
 	
+	public Image getImage()
+	{
+		return piece;
+	}
+	
 //	public int attack(int thisX, int thisY, int targetX, int targetY);
 //	public int receiveAttack(int damageReceived);
 //	public int freeze(int freezeDuration);

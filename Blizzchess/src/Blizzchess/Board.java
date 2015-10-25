@@ -66,5 +66,10 @@ public class Board {
 	public boolean isPiece(int x, int y){
     	return !(felder[x][y] == null);
     }
+	
+	public Image getImage(int x, int y)
+	{
+		return felder[x][y].getImage();
+	}
 
 }
