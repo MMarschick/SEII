@@ -35,6 +35,7 @@ public class View extends Application {
 	
 	int turnState=0;
 	int x,y,xNew,yNew;
+	int xT,yT;///MouseMovedEvent; change names of var
 	
 	public static View waitForStartUpTest() {
         try {
@@ -70,7 +71,7 @@ public class View extends Application {
 		grid.setPadding(new Insets(25,25,25,25));
 		
 		final Text actiontarget = new Text();
-		grid.add(actiontarget, 1, 6);
+		grid.add(actiontarget, 0, 16);
 		
 		Scene sceneLogin = new Scene(grid, 400, 340);
 		grid.setStyle("-fx-background-image: url('alliances.png');");
@@ -120,12 +121,12 @@ public class View extends Application {
 		{
 			public void handle(ActionEvent e)
 			{
-				actiontarget.setFill(Color.FIREBRICK);
-				actiontarget.setText("Sign in button pressed");
+				actiontarget.setFill(Color.RED);
+				actiontarget.setText("Could not connect, please check Input");
 				//Daten muessen an Server geschickt werden
 				//Danach wird dort ueberprueft, ob Name und Passwort uebereinstimmt
 				//Boolean wird zurueckgegeben und in der if-Anweisung geprueft
-				if(userTextField.getText().equals("Test") && pwBox.getText().equals("TestPW"))
+				if(userTextField.getText().equals("") && pwBox.getText().equals(""))
 				{
 					loginStage.close();
 					primaryStage.show();
@@ -165,31 +166,42 @@ public class View extends Application {
         
         Stage infoStage = new Stage();
         infoStage.setTitle("Info");
-        infoStage.setX(loginStage.getX()+434);
-        infoStage.setY(loginStage.getY()-33);
+       //infoStage.setX(loginStage.getX()+434); old
+       //infoStage.setY(loginStage.getY()-33); old
         infoStage.initStyle(StageStyle.UNDECORATED);
         BorderPane infoPane = new BorderPane();
-        Scene infoScene = new Scene(infoPane, 200, 480);
+        Scene infoScene = new Scene(infoPane, 100, 250);
         infoStage.setScene(infoScene);
         
+        
+        //Event um die infoStage zu befuellen und anzuzeigen
         scene.setOnMouseMoved(new EventHandler<MouseEvent>()
        		{
         		public void handle(MouseEvent event)
         		{
-            		x = (int)(event.getX()-board.getIcon().getX())/50;
-            		y = (int)(event.getY()-board.getIcon().getY())/50;
-            		if(board.isPiece(x,y))
+            		xT = (int)(event.getX()-board.getIcon().getX())/50;
+            		yT = (int)(event.getY()-board.getIcon().getY())/50;
+            		
+            		if(board.isPiece(xT,yT)) //befuellen, wenn piece
             		{
-            			infoPane.getChildren().add(new ImageView(board.getImage(x, y)));
+            			infoStage.setX(xT*50+508);
+            			infoStage.setY(yT*50+12);
+            			ImageView aktPiece = new ImageView(board.getImage(xT, yT));
+            			aktPiece.setScaleX(2.5);
+            			aktPiece.setScaleY(2.5);
+            			aktPiece.setX(29);
+            			aktPiece.setY(29);
+            			infoPane.getChildren().add(aktPiece);
             			infoStage.show();
             		}
             		else
             		{
-            			infoStage.close();
+            			infoStage.close(); //schlieﬂen, wenn nicht piece
             		}
         		}
        		}
         );
+        //Event um infoStage zu schlieﬂen beim verlassen der scene
         scene.setOnMouseExited(new EventHandler<MouseEvent>()
         	{
         		public void handle(MouseEvent event)
@@ -214,6 +226,7 @@ public class View extends Application {
             		y = (int)(event.getY()-board.getIcon().getY())/50;
             		if(board.isPiece(x,y)){
             			turnState=1;
+            			System.out.println(turnState);
             			
             			//TEST1
             			//Block zum Zeichnen des Movementpattern
@@ -248,7 +261,6 @@ public class View extends Application {
             		}
             		break;
                 case 1: //Spieler hat ein Piece angeklickt
-                	
                 	xNew = (int)(event.getX()-board.getIcon().getX())/50;
             		yNew = (int)(event.getY()-board.getIcon().getY())/50;
             		board.setField(x, y, xNew, yNew);
