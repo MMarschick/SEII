@@ -1,3 +1,4 @@
+
 package Blizzchess;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -192,9 +193,32 @@ public class View extends Application {
             		}
             		break;
                 case 1: //Spieler hat ein Piece angeklickt
-                	xNew = (int)(event.getX()-board.getIcon().getX())/50;
-            		yNew = (int)(event.getY()-board.getIcon().getY())/50;
-            		board.setField(x, y, xNew, yNew);
+
+                	
+                	xNew= (int)(event.getX()-board.getIcon().getX())/50; //neue x-Koordinate
+            		yNew = (int)(event.getY()-board.getIcon().getY())/50; //neue y-Koordinate
+            		
+            		
+            			
+//            		if (Math.sqrt((xNew-x)*(xNew-x)) <= Movementpattern.PEASANT.getY() && //Berechnung, ob Bewegung  
+//            			Math.sqrt((yNew-y)*(yNew-y)) <=									 //innerhalb des MovementPatterns
+//            				(y==7?Movementpattern.PEASANT.getY2():Movementpattern.PEASANT.getY()) && 
+//            			!(xNew-x == 0 && yNew-y == 0)){  
+//            			if(Movementpattern.PEASANT.getOnlyForward() == false)
+            				board.setField(x, y, xNew, yNew); // Bewegung auf neues Feld
+            			
+            			// Prüfung für Bauern
+//            			else{		
+//            				if ((y-yNew)>0){
+//            					board.setField(x, y, xNew, yNew); // Bewegung auf neues Feld
+//            					
+//            				}
+//            			}
+//            				
+//            		}
+            		
+
+
             		
             		//Sobald ein Piece sich bewegt hat, muessen die gezeichneten Quadrate entfernt werden
             		//Canvas wird anschliessend entfernt
@@ -210,3 +234,9 @@ public class View extends Application {
         });
     }
 }
+
+
+
+
+
+
