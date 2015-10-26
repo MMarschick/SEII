@@ -34,8 +34,8 @@ public class View extends Application {
    
 	
 	int turnState=0;
-	int x,y,xNew,yNew;
-	int xT,yT;///MouseMovedEvent; change names of var
+	int x,y,xNew,yNew;	//x/y: Koordinaten von Event/Piece; xNew/yNew: Neue Koordinaten von Piece (durch Event)
+	int xT,yT;			//MouseMovedEvent; change names of var
 	
 	public static View waitForStartUpTest() {
         try {
@@ -57,97 +57,38 @@ public class View extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-    	//Aufbau Grundfenster; Stage + Scene
-    	
-    	//TEST2
-    	//TEST2 beinhaltet das Login Fenster 
-    	Stage loginStage = new Stage();
-    	loginStage.setTitle("Login for Blizzchess");
-		loginStage.setResizable(false);
-    	GridPane grid = new GridPane();
-		grid.setAlignment(Pos.CENTER);
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(25,25,25,25));
-		
-		final Text actiontarget = new Text();
-		grid.add(actiontarget, 0, 16);
-		
-		Scene sceneLogin = new Scene(grid, 400, 340);
-		grid.setStyle("-fx-background-image: url('alliances.png');");
-		loginStage.setScene(sceneLogin);
-		
-		Text scenetitle = new Text("Welcome to Blizzchess");
-		scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-		scenetitle.setFill(Color.RED);
-		grid.add(scenetitle, 0, 2);
-		
-		Label enemyName = new Label("Enemy (IP):");
-		enemyName.setTextFill(Color.WHITE);
-		grid.add(enemyName, 0, 6);
-		
-		TextField enemyTextField = new TextField();
-		grid.add(enemyTextField, 3, 6);
-		
-		Label serverName = new Label("Server (IP):");
-		serverName.setTextFill(Color.WHITE);
-		grid.add(serverName, 0, 7);
-		
-		TextField serverTextField = new TextField();
-		grid.add(serverTextField, 3, 7);
-		
-		Label userName = new Label("User Name:");
-		userName.setTextFill(Color.WHITE);
-		grid.add(userName, 0, 14);
-		
-		TextField userTextField = new TextField();
-		grid.add(userTextField, 3, 14);
-		
-		Label pw = new Label("Password:");
-		pw.setTextFill(Color.WHITE);
-		grid.add(pw, 0, 15);
-		
-		PasswordField pwBox = new PasswordField();
-		grid.add(pwBox, 3, 15);
-		
-		
-		Button btn = new Button("Sign in");
-		HBox hbBtn = new HBox(10);
-		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-		hbBtn.getChildren().add(btn);
-		grid.add(hbBtn, 3, 16);
-		
-		btn.setOnAction(new EventHandler<ActionEvent>()
+    	//Zunaechst wird der Login behandelt
+    	Login login = new Login();
+    	//EventHandler: wenn Login-Button betaetigt wird
+		login.getBtn().setOnAction(new EventHandler<ActionEvent>()
 		{
 			public void handle(ActionEvent e)
 			{
-				actiontarget.setFill(Color.RED);
-				actiontarget.setText("Could not connect, please check Input");
 				//Daten muessen an Server geschickt werden
 				//Danach wird dort ueberprueft, ob Name und Passwort uebereinstimmt
 				//Boolean wird zurueckgegeben und in der if-Anweisung geprueft
-				if(userTextField.getText().equals("") && pwBox.getText().equals(""))
+				if(login.getUserTextField().getText().equals("Test") && login.getPwBox().getText().equals("TestPW"))
 				{
-					loginStage.close();
+					login.closeStage();
 					primaryStage.show();
 				}
-				
+				else
+				{
+					login.getActiontarget().setFill(Color.RED);
+					login.getActiontarget().setText("Could not connect, please check Input");
+				}
 			}
 		});
-		loginStage.show();
-    	//ENDTEST2
+		login.showStage();
 		
+		//Definierung der primaryStage + Pane + Scene
         primaryStage.setTitle("Blizzchess - Savants of Warcraft");
 		primaryStage.setResizable(false);
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 440, 440);
+        primaryStage.setScene(scene);
         Board board = new Board(root);
         
-        
-       // root.getChildren().add(board.getIcon());  Wird in Board.java verlegt
-        
-        //TEST1
-        //TEST1 beinhaltet die farbliche Umrandung um ein Piece zur Darstellung Reichweite (Movement)
         //koX/Y: Nullkoordinaten
 		final int koX = (int)root.getLayoutX();
 		final int koY = (int)root.getLayoutY();
@@ -158,16 +99,10 @@ public class View extends Application {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		gc.setStroke(Color.rgb(0, 255, 0, 0.9));
 		gc.setLineWidth(3);
-        //ENDTEST1
-        
-        primaryStage.setScene(scene);
-        
-        //TEST3
-        
+                
+        //Definierung der infoStage + Scene + Pane
         Stage infoStage = new Stage();
         infoStage.setTitle("Info");
-       //infoStage.setX(loginStage.getX()+434); old
-       //infoStage.setY(loginStage.getY()-33); old
         infoStage.initStyle(StageStyle.UNDECORATED);
         BorderPane infoPane = new BorderPane();
         Scene infoScene = new Scene(infoPane, 100, 250);
@@ -184,8 +119,9 @@ public class View extends Application {
             		
             		if(board.isPiece(xT,yT)) //befuellen, wenn piece
             		{
+            			//Bild des Piece holen, neu skalieren und infoStage setzen
             			infoStage.setX(xT*50+508);
-            			infoStage.setY(yT*50+12);
+            			infoStage.setY(yT*50+11);
             			ImageView aktPiece = new ImageView(board.getImage(xT, yT));
             			aktPiece.setScaleX(2.5);
             			aktPiece.setScaleY(2.5);
@@ -213,7 +149,6 @@ public class View extends Application {
         		}
         	}
         );
-        //ENDTEST3
         
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -226,7 +161,6 @@ public class View extends Application {
             		y = (int)(event.getY()-board.getIcon().getY())/50;
             		if(board.isPiece(x,y)){
             			turnState=1;
-            			System.out.println(turnState);
             			
             			//TEST1
             			//Block zum Zeichnen des Movementpattern
@@ -255,9 +189,6 @@ public class View extends Application {
             			}
             			
             			root.getChildren().add(canvas);
-            			
-            			//ENDTEST1
-            			//showMoves();
             		}
             		break;
                 case 1: //Spieler hat ein Piece angeklickt
@@ -265,29 +196,17 @@ public class View extends Application {
             		yNew = (int)(event.getY()-board.getIcon().getY())/50;
             		board.setField(x, y, xNew, yNew);
             		
-            		//TEST1
             		//Sobald ein Piece sich bewegt hat, muessen die gezeichneten Quadrate entfernt werden
             		//Canvas wird anschliessend entfernt
             		gc.clearRect(canvas.getLayoutX(),canvas.getLayoutY(), canvas.getWidth(), canvas.getHeight());
             		root.getChildren().remove(canvas);
-            		//ENDTEST1
-            		
+
             		turnState=0;
                 	break;
                 case 2: break;
                 case 3: break;
                 }
-                
-                
             }
         });
-        
-        
-        
-        //primaryStage.show();
-        
-
     }
-    
-
 }

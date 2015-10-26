@@ -53,6 +53,11 @@ public class Board {
 	public ImageView getIcon(){
 		return icon;
 	}
+	//Get-Methode fuer icon (Image) von einem Piece
+	public Image getImage(int x, int y)
+	{
+		return felder[x][y].getImage();
+	}
 	
 	//Methode zum Bewegen eines Pieces auf der View und im Array "felder"
 	public void setField(int x, int y, int kx, int ky){
@@ -66,10 +71,4 @@ public class Board {
 	public boolean isPiece(int x, int y){
     	return !(felder[x][y] == null);
     }
-	
-	public Image getImage(int x, int y)
-	{
-		return felder[x][y].getImage();
-	}
-
 }
