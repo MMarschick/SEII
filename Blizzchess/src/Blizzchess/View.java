@@ -68,7 +68,7 @@ public class View extends Application {
 				//Daten muessen an Server geschickt werden
 				//Danach wird dort ueberprueft, ob Name und Passwort uebereinstimmt
 				//Boolean wird zurueckgegeben und in der if-Anweisung geprueft
-				if(login.getUserTextField().getText().equals("Test") && login.getPwBox().getText().equals("TestPW"))
+				if(login.getUserTextField().getText().equals("") && login.getPwBox().getText().equals(""))
 				{
 					login.closeStage();
 					primaryStage.show();
@@ -168,7 +168,61 @@ public class View extends Application {
             			//Muss das Movementpattern spaeter verarbeiten koennen
             			gc.strokeRect(koX+50*x,koY+50*y, 50, 50);
             			
-            			for(int i=0; i<3; i++)
+            			int xMovePat = board.getPiece(x, y).getMovementPattern().getX();
+            			int yMovePat = board.getPiece(x, y).getMovementPattern().getY();
+            			int specialMovePat = board.getPiece(x, y).getMovementPattern().getSpecial();
+            			int y2MovePat = board.getPiece(x, y).getMovementPattern().getY2();
+            				
+            			if (specialMovePat == 1)
+            			{
+            				gc.strokeRect(x*50, (y-yMovePat)*50, 50, 50);
+            				if(y==7)
+            				{
+            					gc.strokeRect(x*50, (y-y2MovePat)*50, 50, 50);
+            				}
+            			}
+            			
+            			if (specialMovePat == 2 || specialMovePat == 0)
+            			{
+            				for (int i=x-xMovePat, j=y-yMovePat; i<x+xMovePat+1; i++,j++)
+            				{
+            					gc.strokeRect(i*50, j*50, 50, 50);
+            				}
+            				for (int i=x-xMovePat, j=y+yMovePat; i<x+xMovePat+1; i++,j--)
+            				{
+            					gc.strokeRect(i*50, j*50, 50, 50);
+            				}
+            			}
+            			
+            			if (specialMovePat == 3 || specialMovePat == 0)
+            			{
+            				for(int i=x-xMovePat, j=y-yMovePat; i<x+xMovePat+1; i++, j++)
+            				{
+            					gc.strokeRect(i*50, y*50, 50, 50);
+            					gc.strokeRect(x*50, j*50, 50, 50);
+            				}
+            			}
+            			
+            			if (specialMovePat == 4)
+            			{
+            				for(int i=x-xMovePat, j=1; j<3; i++, j++)
+            				{
+            					gc.strokeRect(i*50, (y+j)*50, 50, 50);
+            				}
+            				for(int i=1, j=2; j>0; i++, j--)
+            				{
+            					gc.strokeRect((i+x)*50, (y+j)*50, 50, 50);
+            				}
+            				for(int i=x-xMovePat, j=1; j<3; i++, j++)
+            				{
+            					gc.strokeRect(i*50, (y-j)*50, 50, 50);
+            				}
+            				for(int i=1, j=2; j>0; i++, j--)
+            				{
+            					gc.strokeRect((i+x)*50, (y-j)*50, 50, 50);
+            				}
+            			}
+            			/*for(int i=0; i<3; i++)
             			{
             				if((koX+50*(x-i))/50>-1 && (koX+50*(x-i))/50<9)
             				gc.strokeRect(koX+50*(x-i),koY+50*y, 50, 50);
@@ -187,7 +241,7 @@ public class View extends Application {
             			{
             				if((koX+50*(y+i))/50>0 && (koX+50*(y+i))/50<9)
             				gc.strokeRect(koX+50*x,koY+50*(y+i), 50, 50);
-            			}
+            			}*/
             			
             			root.getChildren().add(canvas);
             		}

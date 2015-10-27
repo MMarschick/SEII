@@ -124,6 +124,11 @@ public class Board {
 		felder[x][y]=null;
 		
 	}
+	
+	public Piece getPiece(int x, int y)
+	{
+		return felder[x][y];
+	}
 
 }
 
