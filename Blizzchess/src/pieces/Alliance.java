@@ -1,4 +1,4 @@
-package Blizzchess;
+package pieces;
 
 public enum Alliance 
 {

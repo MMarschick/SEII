@@ -1,8 +1,9 @@
-package Blizzchess;
+package game;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import pieces.*;
 
 public class Board {
 	Piece felder[][] = new Piece[9][9]; //enthaelt Pieces mit der Koordinate als Index

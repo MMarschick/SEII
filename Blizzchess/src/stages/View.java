@@ -1,32 +1,21 @@
 
-package Blizzchess;
+package stages;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.WindowEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import java.util.concurrent.CountDownLatch;
+
+import game.Board;
  
 public class View extends Application {
 	
@@ -60,6 +49,7 @@ public class View extends Application {
     public void start(Stage primaryStage) {
     	//Zunaechst wird der Login behandelt
     	Login login = new Login();
+    	Menu menu = new Menu();
     	//EventHandler: wenn Login-Button betaetigt wird
 		login.getBtn().setOnAction(new EventHandler<ActionEvent>()
 		{
@@ -72,6 +62,7 @@ public class View extends Application {
 				{
 					login.closeStage();
 					primaryStage.show();
+					menu.showStage();
 				}
 				else
 				{
@@ -81,6 +72,16 @@ public class View extends Application {
 			}
 		});
 		login.showStage();
+		
+		
+		menu.getBtn().setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent e)
+			{
+				menu.changeButton();
+			}
+			
+		});
+		
 		
 		//Definierung der primaryStage + Pane + Scene
         primaryStage.setTitle("Blizzchess - Savants of Warcraft");
@@ -103,7 +104,6 @@ public class View extends Application {
                 
         //Definierung der infoStage + Scene + Pane
         Stage infoStage = new Stage();
-        infoStage.setTitle("Info");
         infoStage.initStyle(StageStyle.UNDECORATED);
         BorderPane infoPane = new BorderPane();
         Scene infoScene = new Scene(infoPane, 100, 250);
@@ -120,16 +120,19 @@ public class View extends Application {
             		
             		if(board.isPiece(xT,yT)) //befuellen, wenn piece
             		{
-            			//Bild des Piece holen, neu skalieren und infoStage setzen
-            			infoStage.setX(xT*50+508);
-            			infoStage.setY(yT*50+11);
-            			ImageView aktPiece = new ImageView(board.getImage(xT, yT));
-            			aktPiece.setScaleX(2.5);
-            			aktPiece.setScaleY(2.5);
-            			aktPiece.setX(29);
-            			aktPiece.setY(29);
-            			infoPane.getChildren().add(aktPiece);
-            			infoStage.show();
+            			if (menu.getButtonGreen() == true){
+						// Bild des Piece holen, neu skalieren und infoStage
+						// setzen
+            				infoStage.setX(xT * 50 + 508);
+            				infoStage.setY(yT * 50 + 11);
+            				ImageView aktPiece = new ImageView(board.getImage(xT, yT));
+            				aktPiece.setScaleX(2.5);
+            				aktPiece.setScaleY(2.5);
+            				aktPiece.setX(29);
+            				aktPiece.setY(29);
+            				infoPane.getChildren().add(aktPiece);
+            				infoStage.show();
+            			}
             		}
             		else
             		{
@@ -253,24 +256,9 @@ public class View extends Application {
             		yNew = (int)(event.getY()-board.getIcon().getY())/50; //neue y-Koordinate
             		
             		
-            			
-//            		if (Math.sqrt((xNew-x)*(xNew-x)) <= Movementpattern.PEASANT.getY() && //Berechnung, ob Bewegung  
-//            			Math.sqrt((yNew-y)*(yNew-y)) <=									 //innerhalb des MovementPatterns
-//            				(y==7?Movementpattern.PEASANT.getY2():Movementpattern.PEASANT.getY()) && 
-//            			!(xNew-x == 0 && yNew-y == 0)){  
-//            			if(Movementpattern.PEASANT.getOnlyForward() == false)
-            				board.setField(x, y, xNew, yNew); // Bewegung auf neues Feld
-            			
-            			// Prüfung für Bauern
-//            			else{		
-//            				if ((y-yNew)>0){
-//            					board.setField(x, y, xNew, yNew); // Bewegung auf neues Feld
-//            					
-//            				}
-//            			}
-//            				
-//            		}
             		
+            		board.setField(x, y, xNew, yNew); // Bewegung auf neues Feld
+            			
 
 
             		
@@ -286,6 +274,11 @@ public class View extends Application {
                 }
             }
         });
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                menu.closeStage();
+            }
+        });    
     }
 }
 

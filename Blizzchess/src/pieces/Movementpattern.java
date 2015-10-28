@@ -1,5 +1,5 @@
 
-package Blizzchess;
+package pieces;
 
 public enum Movementpattern 
 {
@@ -25,9 +25,9 @@ public enum Movementpattern
 		
 	}
 	
-	int getX(){ return x;}
-	int getY(){ return y;}
-	int getY2(){ return y2;}
-	int getSpecial(){ return special;}
+	public int getX(){ return x;}
+	public int getY(){ return y;}
+	public int getY2(){ return y2;}
+	public int getSpecial(){ return special;}
 	
 }
