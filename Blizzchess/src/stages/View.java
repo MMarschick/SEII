@@ -1,3 +1,5 @@
+//Verwaltet alle Stages
+// enthält Grafische Elemente wie Rekt
 
 package stages;
 import javafx.application.Application;
@@ -102,7 +104,11 @@ public class View extends Application {
 		gc.setStroke(Color.rgb(0, 255, 0, 0.9));
 		gc.setLineWidth(3);
                 
-        //Definierung der infoStage + Scene + Pane
+		
+		
+		//info stage in eigene Klasse!
+     
+		//Definierung der infoStage + Scene + Pane
         Stage infoStage = new Stage();
         infoStage.initStyle(StageStyle.UNDECORATED);
         BorderPane infoPane = new BorderPane();
@@ -158,17 +164,18 @@ public class View extends Application {
             @Override
             //Aufbau/Kontrolle eines Spielzuges
             public void handle(MouseEvent event) {
+            	//Switch-Case in Game
                 switch(turnState){
                 case 0: //Spieler ist in einem neuen Spielzug
-            		System.out.println("mouse click detected! "+event.getSource());
             		x = (int)(event.getX()-board.getIcon().getX())/50;
             		y = (int)(event.getY()-board.getIcon().getY())/50;
             		if(board.isPiece(x,y)){
             			turnState=1;
             			
+            			
             			//TEST1
             			//Block zum Zeichnen des Movementpattern
-            			//Muss das Movementpattern spaeter verarbeiten koennen
+            			//benutzt neue possibleMove Methode
             			gc.strokeRect(koX+50*x,koY+50*y, 50, 50);
             			
             			int xMovePat = board.getPiece(x, y).getMovementPattern().getX();
@@ -225,26 +232,6 @@ public class View extends Application {
             					gc.strokeRect((i+x)*50, (y-j)*50, 50, 50);
             				}
             			}
-            			/*for(int i=0; i<3; i++)
-            			{
-            				if((koX+50*(x-i))/50>-1 && (koX+50*(x-i))/50<9)
-            				gc.strokeRect(koX+50*(x-i),koY+50*y, 50, 50);
-            			}
-            			for(int i=1; i<3; i++)
-            			{
-            				if((koX+50*(x+i))/50>0 && (koX+50*(x+i))/50<9)
-            				gc.strokeRect(koX+50*(x+i),koY+50*y, 50, 50);
-            			}
-            			for(int i=1; i<3; i++)
-            			{
-            				if((koX+50*(y-i))/50>0-1 && (koX+50*(y-i))/50<9)
-            				gc.strokeRect(koX+50*x,koY+50*(y-i), 50, 50);
-            			}
-            			for(int i=1; i<3; i++)
-            			{
-            				if((koX+50*(y+i))/50>0 && (koX+50*(y+i))/50<9)
-            				gc.strokeRect(koX+50*x,koY+50*(y+i), 50, 50);
-            			}*/
             			
             			root.getChildren().add(canvas);
             		}

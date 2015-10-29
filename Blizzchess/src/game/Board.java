@@ -1,3 +1,7 @@
+//Führt ein Array aller Figuren auf dem Feld
+//Baut das Spielfeld auf
+//Enthält die Syntax zum Bewegen der Felder (wird von der View aufgerufen)
+
 package game;
 
 import javafx.scene.image.Image;
@@ -9,12 +13,8 @@ public class Board {
 	Piece felder[][] = new Piece[9][9]; //enthaelt Pieces mit der Koordinate als Index
 	Piece pieces[] = new Piece[18];     //enthaelt die Pieces
 	
-
 	ImageView icon;
 	Image board;
-	
-	
-	
 	
 	public Board(BorderPane root ){
 		board = new Image("board.png"); //Spielbrett
@@ -53,15 +53,9 @@ public class Board {
 		}
 	}
 	
-	//Get-Methode fuer icon (Image) von Board
-	public ImageView getIcon(){
-		return icon;
-	}
-	//Get-Methode fuer icon (Image) von einem Piece
-	public Image getImage(int x, int y)
-	{
-		return felder[x][y].getImage();
-	}
+	//eigene Methode zum Berechnen der möglichen Felder(als int array[]) in Piece
+	// Methode gibt dieses array zurück
+	//wird benutzt von View zum zeichnen, von Board zum bewegen (movement-, attack- und abilitypattern)
 	
 	//Methode zum Bewegen eines Pieces auf der View und im Array "felder"
 	public void setField(int x, int y, int kx, int ky){
@@ -69,7 +63,9 @@ public class Board {
 		if (Math.abs(kx-x) <= felder[x][y].getMovementPattern().getX() && //Berechnung, ob Bewegung  
     		Math.abs(ky-y) <=												 //innerhalb des MovementPatterns
     			(y==7?felder[x][y].getMovementPattern().getY2():felder[x][y].getMovementPattern().getY()) && 
-    		!(kx-x == 0 && ky-y == 0)){  
+    		!(kx-x == 0 && ky-y == 0) &&
+			felder[kx][ky]==null 
+			){  
     			
 				//in alle Richtungen
 				if(felder[x][y].getMovementPattern().getSpecial() == 0){
@@ -112,6 +108,8 @@ public class Board {
 		
 	}
 	
+	
+	
 	//Methode zum Setzen leerer Elemente im Array "felder"
 	public boolean isPiece(int x, int y){
     	return !(felder[x][y] == null);
@@ -126,11 +124,11 @@ public class Board {
 		
 	}
 	
-	public Piece getPiece(int x, int y)
-	{
-		return felder[x][y];
+	//Getter
+	public Piece getPiece(int x, int y)	{return felder[x][y];}
+	public ImageView getIcon(){return icon;}
+	public Image getImage(int x, int y){return felder[x][y].getImage();
 	}
-
 }
 
 

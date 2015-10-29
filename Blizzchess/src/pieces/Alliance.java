@@ -1,3 +1,5 @@
+//weg, alliance attribut von Piece
+
 package pieces;
 
 public enum Alliance 
