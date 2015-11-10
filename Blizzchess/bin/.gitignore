@@ -1,4 +1,3 @@
-/Blizzchess/
 /abomination.png
 /alliances.png
 /archer.png
@@ -8,6 +7,7 @@
 /dreadlord.png
 /driad.png
 /frostwyrm.png
+/game/
 /headhunter.png
 /keeper.png
 /knight.png
@@ -15,10 +15,7 @@
 /mountainking.png
 /peasant.png
 /peon.png
-/shaman.png
-/wolfrider.png
-/stages/
-/enums/
-/patterns/
 /pieces/
-/game/
+/shaman.png
+/stages/
+/wolfrider.png
