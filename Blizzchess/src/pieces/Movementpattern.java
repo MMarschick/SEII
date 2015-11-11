@@ -1,4 +1,3 @@
-
 package pieces;
 
 public enum Movementpattern 
