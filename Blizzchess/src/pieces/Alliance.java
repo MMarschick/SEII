@@ -12,4 +12,6 @@ public enum Alliance
 	{
 		this.allianceName=allianceName;
 	}
+
+	public String getAllianceName() {return allianceName;}
 }
