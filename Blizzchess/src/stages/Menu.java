@@ -67,7 +67,7 @@ public class Menu
 		menuStage.setScene(menuScene);
 		
 		btn = new Button("INFO");
-		btn.setStyle("-fx-background-color: RED;");
+		btn.setStyle("-fx-background-color: GREEN;");
 		grid.getChildren().add(btn);
 	}
 }

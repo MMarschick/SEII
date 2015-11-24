@@ -1,6 +1,3 @@
-//Verwaltet alle Stages
-// enthält Grafische Elemente wie Rekt
-
 package stages;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -19,7 +16,12 @@ import javafx.stage.StageStyle;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
+import connection.Client;
 import game.Board;
+
+import java.io.File;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class View extends Application 
 {
@@ -55,39 +57,142 @@ public class View extends Application
 	{
 		setStartUpTest(this);
 	}
-
+	
+	Media sound;
+	public Media getSound()
+	{
+		return sound;
+	}
+	public void setSound(String track)
+	{
+		sound=new Media(new File(track).toURI().toString());
+	}
 	@Override
 	public void start(Stage primaryStage) {
 		//Zunaechst wird der Login behandelt
 		Login login = new Login();
+		Client player = new Client();
+		GameSelect gameSelect = new GameSelect();
 		Menu menu = new Menu();
 		login.showStage();
+		
+		setSound("sounds\\stages\\Mainscreen.mp3");
+		MediaPlayer audio = new MediaPlayer(getSound());
+	    audio.setVolume(0.05);
+		audio.play();
+		audio.setAutoPlay(true);
+
+		login.getCreateBtn().setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent ae)
+			{
+				if(!login.getNewPlayerName().getText().equals("")&&
+						!login.getNewPlayerPW().getText().equals("")&&
+						login.getNewPlayerPWConfirm().getText().equals(login.getNewPlayerPW().getText()))
+				{
+					System.out.println("Spieler erstellen");
+					player.setPlayerName(login.getNewPlayerName().getText());
+					player.setPlayerPW(login.getNewPlayerPW().getText());
+					if(player.createPlayer())
+					{
+						System.out.println("Erfolgreich");
+						if(player.checkLogin())
+						{
+							login.closeNewPlayerStage();
+							login.closeStage();
+							gameSelect.showStage();
+						}
+						else
+						{
+							System.out.println("Failed to login");
+						}
+					}
+					else
+					{
+						System.out.println("Fehlerhafte Eingabe");
+						login.setL4();
+						login.clearStringsNewPlayer();
+					}
+				}
+				else
+				{
+					System.out.println("Fehlerhafte Eingabe");
+					login.setL4();
+					login.clearStringsNewPlayer();
+				}
+			}
+		});
+		login.getCancelBtn().setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent ae)
+			{
+				System.out.println("Erstellung abbrechen");
+				login.closeNewPlayerStage();
+			}
+		});
+		
+		gameSelect.getLogoutBtn().setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent ae)
+			{
+				try
+				{
+					if(player.checkLogout())
+					{
+						gameSelect.closeStage();
+						login.showStage();
+					}
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		gameSelect.getNewGameBtn().setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent ae)
+			{
+				gameSelect.closeStage();
+				primaryStage.show();
+				menu.showStage();
+			}
+		});
 		
 		//EventHandler: wenn Login-Button betaetigt wird
 		login.getBtn().setOnAction(new EventHandler<ActionEvent>()
 		{
-			public void handle(ActionEvent e)
+			
+			public void handle(ActionEvent ae)
 			{
+				login.getActiontarget().setFill(Color.YELLOW);
+				login.getActiontarget().setText("connecting...");
+				//New
+				player.setPlayerName(login.getUserTextField().getText());
+				player.setPlayerPW(login.getPwBox().getText());
 				//Daten muessen an Server geschickt werden
 				//Danach wird dort ueberprueft, ob Name und Passwort uebereinstimmt
 				//Boolean wird zurueckgegeben und in der if-Anweisung geprueft
-				if(login.getUserTextField().getText().equals("") && login.getPwBox().getText().equals(""))
+				if(player.checkLogin())
 				{
 					login.closeStage();
-					primaryStage.show();
-					menu.showStage();
+					//login.clearStrings();
+					gameSelect.setOpenGames(gameSelect.createOpenGamesList(player.getOpenGames()));
+					gameSelect.showStage();
 				}
 				else
 				{
 					login.getActiontarget().setFill(Color.RED);
-					login.getActiontarget().setText("Could not connect, please check Input");
+					login.getActiontarget().setText("Could not login");
+					login.showAndWaitNewPlayerStage();
 				}
 			}
 		});
 
 		menu.getBtn().setOnAction(new EventHandler<ActionEvent>()
 		{
-			public void handle(ActionEvent e)
+			public void handle(ActionEvent ae)
 			{
 				menu.changeButton();
 				if(turnState>1)
@@ -106,6 +211,8 @@ public class View extends Application
 		primaryStage.setScene(scene);
 		Board board = new Board(root);
 
+		
+		
 		//koX/Y: Nullkoordinaten
 		//final int koX = (int)root.getLayoutX();
 		//final int koY = (int)root.getLayoutY();
