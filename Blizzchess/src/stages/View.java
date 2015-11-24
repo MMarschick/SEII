@@ -3,6 +3,8 @@
 
 package stages;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -11,7 +13,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.stage.WindowEvent;
 import pieces.Alliance;
-import pieces.Piece;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -28,6 +29,9 @@ public class View extends Application
 {
 	public static final CountDownLatch latch = new CountDownLatch(1);
 	public static View startUpTest = null;
+	Menu menu = new Menu();
+	Info info = new Info();
+	
 
 	int turnState=0;
 	Alliance whoseTurn=Alliance.GOOD;
@@ -57,9 +61,26 @@ public class View extends Application
 
 	@Override
 	public void start(Stage primaryStage) {
+
+		primaryStage.xProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				menu.setPosition(primaryStage);
+			}
+		});
+		
+		primaryStage.yProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				menu.setPosition(primaryStage);
+			}
+		});
+		
 		//Zunaechst wird der Login behandelt
 		Login login = new Login();
-		Menu menu = new Menu();
+		
 		//EventHandler: wenn Login-Button betaetigt wird
 		login.getBtn().setOnAction(new EventHandler<ActionEvent>()
 		{
@@ -72,7 +93,9 @@ public class View extends Application
 				{
 					login.closeStage();
 					primaryStage.show();
+					menu.setPosition(primaryStage);
 					menu.showStage();
+					info.showStage();
 				}
 				else
 				{
@@ -128,16 +151,7 @@ public class View extends Application
 		root.getChildren().add(canvasGreen);
 		root.getChildren().add(canvasRed);
 
-		//info stage in eigene Klasse!
-
-		//Definierung der infoStage + Scene + Pane
-		Stage infoStage = new Stage();
-		infoStage.initStyle(StageStyle.UNDECORATED);
-		BorderPane infoPane = new BorderPane();
-		Scene infoScene = new Scene(infoPane, 100, 250);
-		infoStage.setScene(infoScene);
-
-
+		
 		//Event um die infoStage zu befuellen und anzuzeigen
 		scene.setOnMouseMoved(new EventHandler<MouseEvent>()
 		{
@@ -151,36 +165,15 @@ public class View extends Application
 					if (menu.getButtonGreen() == true){
 						// Bild des Piece holen, neu skalieren und infoStage
 						// setzen
-						infoStage.setX(xT * 50 + 508);
-						infoStage.setY(yT * 50 + 11);
 						ImageView aktPiece = new ImageView(board.getImage(xT, yT));
 						aktPiece.setScaleX(2.5);
 						aktPiece.setScaleY(2.5);
-						aktPiece.setX(29);
-						aktPiece.setY(29);
-						infoPane.getChildren().add(aktPiece);
-						infoStage.show();
+						
 					}
 				}
-				else
-				{
-					infoStage.close(); //schlieﬂen, wenn nicht piece
-				}
 			}
-		}
-				);
-		//Event um infoStage zu schlieﬂen beim verlassen der scene
-		scene.setOnMouseExited(new EventHandler<MouseEvent>()
-		{
-			public void handle(MouseEvent event)
-			{
-				if(infoStage.isShowing())
-				{
-					infoStage.close();
-				}
-			}
-		}
-				);
+		});
+		
 
 		scene.setOnMousePressed(new EventHandler<MouseEvent>() 
 		{
@@ -307,6 +300,7 @@ public class View extends Application
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent we) {
 				menu.closeStage();
+				info.closeStage();
 			}
 		});    
 	}
