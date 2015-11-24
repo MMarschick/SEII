@@ -186,7 +186,8 @@ public class Client
     	try
     	{
     		//Socket fuer Connection
-    		String host = "169.254.106.0";
+//    		String host = "169.254.106.0";
+    		String host = "192.168.0.239";
     		int port = 25000;
     		InetAddress address = InetAddress.getByName(host);
     		socket = new Socket(address, port);

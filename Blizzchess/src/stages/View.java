@@ -58,15 +58,15 @@ public class View extends Application
 		setStartUpTest(this);
 	}
 	
-	Media sound;
-	public Media getSound()
-	{
-		return sound;
-	}
-	public void setSound(String track)
-	{
-		sound=new Media(new File(track).toURI().toString());
-	}
+//	Media sound;
+//	public Media getSound()
+//	{
+//		return sound;
+//	}
+//	public void setSound(String track)
+//	{
+//		sound=new Media(new File(track).toURI().toString());
+//	}
 	@Override
 	public void start(Stage primaryStage) {
 		//Zunaechst wird der Login behandelt
@@ -76,11 +76,11 @@ public class View extends Application
 		Menu menu = new Menu();
 		login.showStage();
 		
-		setSound("sounds\\stages\\Mainscreen.mp3");
-		MediaPlayer audio = new MediaPlayer(getSound());
-	    audio.setVolume(0.05);
-		audio.play();
-		audio.setAutoPlay(true);
+//		setSound("sounds\\stages\\Mainscreen.mp3");
+//		MediaPlayer audio = new MediaPlayer(getSound());
+//	    audio.setVolume(0.05);
+//		audio.play();
+//		audio.setAutoPlay(true);
 
 		login.getCreateBtn().setOnAction(new EventHandler<ActionEvent>()
 		{
