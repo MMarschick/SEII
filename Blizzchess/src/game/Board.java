@@ -23,7 +23,7 @@ public class Board
 	//Konstruktor; erstellt aus einem parseString ein Bord; fügt das Board-Icon der View hinzu
 	public Board(BorderPane root, String parseString)
 	{
-		board = new Image("Board.png"); //Spielbrett
+		board = new Image("board.png"); //Spielbrett
 		icon = new ImageView(board);
 		this.deadPieces=new ArrayList<Piece>();
 		this.possibleMove=new ArrayList<Integer>();
