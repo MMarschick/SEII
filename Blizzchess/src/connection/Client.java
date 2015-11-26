@@ -180,6 +180,110 @@ public class Client
     	return createTry;
     }
     
+//    public boolean turn()
+//    {
+//    	try
+//    	{
+//    		if(br.readLine().equals("true"))
+//    		{
+//    			return true;
+//    		}
+//    	}
+//    	catch(Exception e)
+//    	{
+//    		System.out.println(e.getMessage());
+//    	}
+//    	return false;
+//    }
+    
+    public boolean searchGame()
+    {
+    	//turn
+    	sendMessage("searchGame", playerName);
+    	try
+    	{
+    		if(br.readLine().equals("true"))
+    		{
+    			return true;
+    		}
+    	}
+    	catch(Exception e)
+    	{
+    		System.out.println(e.getMessage());
+    	}
+    	return false;
+    }
+    
+    //in newGame:
+    //neue methode nach searchNewGame verlagern
+    //am ende eine while (true) setzen
+    //bei 2 if abfragen überprüfen, ob es erfolgreich ist
+    //(update wurde ausgeführt; spiel ist bereits vorhanden)
+    //dann return true;;; vllt doch gameString? + PlayerOne + PlayerTwo? + Turn?
+    public boolean waitForGame()
+    {
+    	sendMessage("waitForGame", playerName);
+    	try
+    	{
+    		if(br.readLine().equals("true"))
+    		{
+    			return true;
+    		}
+    	}
+    	catch(Exception e)
+    	{
+    		System.out.println(e.getMessage());
+    	}
+    	return false;
+    }
+    
+//    case "searchGame":
+//    	returnMessage=searchingGame(abc[1]);
+//    	break;
+//    	
+//    public String searchingGame(String playerName)
+//    {
+//    	return dataAccessor.search(playerName);
+//    }
+//    
+//    public String search(String playerName)
+//    {
+//    	rs...
+//    	if(online && searching)
+//    	{
+//    		boolean p1Free true;
+//    		if(playerOne.equals(""))
+//    		{
+//    			setPlayerOne(playerName);
+//    			p1Free=false;
+//    		}
+//    		if(playerTwo.equals("")&&!p1Free)
+//    		{
+//    			setPlayerTwo(playerName);
+//    		}
+//    		if(!PlayerOne.equals("")&&!PlayerTwo.equals(""))
+//    		{
+//    			if(Mathrandom >= 0.5)
+//    			{
+//    				setTurn(PlayerOne);
+//    			}
+//    			else
+//    			{
+//    				setTurn(PlayerTwo);
+//    			}
+//    			createGame(where PlayerOne PlayerTwo turn)
+//    			return "new";
+//    		}
+//    		else
+//    		{
+//    			return "wait";
+//    		}
+//    	}
+//    	else
+//    	{
+//    		return "";
+//    	}
+//    }
     
     public Client()
     {
