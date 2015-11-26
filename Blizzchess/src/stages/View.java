@@ -17,7 +17,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,20 +26,9 @@ import game.*;
 
 public class View extends Application 
 {
+	//StartUp
 	public static final CountDownLatch latch = new CountDownLatch(1);
 	public static View startUpTest = null;
-	Menu menu = new Menu();
-	Info info = new Info();
-	
-
-	int turnState=0;
-	Alliance whoseTurn=Alliance.GOOD;
-	int x,y,xNew,yNew;	//x/y: Koordinaten von Event/Piece; xNew/yNew: Neue Koordinaten von Piece (durch Event)
-	int xT,yT;			//MouseMovedEvent; change names of var
-
-	ArrayList<Integer> possibleMove;
-	ArrayList<Integer> possibleTarget;
-
 	public static View waitForStartUpTest() {
 		try {
 			latch.await();
@@ -58,15 +46,29 @@ public class View extends Application
 	public View() {
 		setStartUpTest(this);
 	}
+	
+	//Klassen der Stages
+	Menu menu = new Menu();
+	Info info = new Info();
+	
+	int turnState=0;
+	Alliance whoseTurn=Alliance.GOOD;
+	int x,y,xNew,yNew;	//x/y: Koordinaten von Event/Piece; xNew/yNew: Neue Koordinaten von Piece (durch Event)
+	int xT,yT;			//MouseMovedEvent; change names of var
+
+	ArrayList<Integer> possibleMove;
+	ArrayList<Integer> possibleTarget;
 
 	@Override
 	public void start(Stage primaryStage) {
 
+		//wird Hauptstage verschoben, verschieben sich beide Leisten entsprechend mit
 		primaryStage.xProperty().addListener(new ChangeListener<Number>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				menu.setPosition(primaryStage);
+				info.setPosition(primaryStage);
 			}
 		});
 		
@@ -75,13 +77,14 @@ public class View extends Application
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				menu.setPosition(primaryStage);
+				info.setPosition(primaryStage);
 			}
 		});
 		
-		//Zunaechst wird der Login behandelt
+		//Zunächst wird der Login behandelt
 		Login login = new Login();
 		
-		//EventHandler: wenn Login-Button betaetigt wird
+		//EventHandler: wenn Login-Button betätigt wird
 		login.getBtn().setOnAction(new EventHandler<ActionEvent>()
 		{
 			public void handle(ActionEvent e)
@@ -95,6 +98,7 @@ public class View extends Application
 					primaryStage.show();
 					menu.setPosition(primaryStage);
 					menu.showStage();
+					info.setPosition(primaryStage);
 					info.showStage();
 				}
 				else
@@ -106,7 +110,7 @@ public class View extends Application
 		});
 		login.showStage();
 
-
+		//wird später für Zug beenden benutzt
 		menu.getBtn().setOnAction(new EventHandler<ActionEvent>()
 		{
 			public void handle(ActionEvent e)
@@ -129,10 +133,6 @@ public class View extends Application
 		Board board = new Board(root, GameParser.DEFAULT_STRING);
 
 		Arrays.toString(board.getFelder());
-
-		//koX/Y: Nullkoordinaten
-		//final int koX = (int)root.getLayoutX();
-		//final int koY = (int)root.getLayoutY();
 
 		//Setzen des Canvas (Zeichner) für Felder auf die eine Figur bewegt werden kann
 		final Canvas canvasGreen = new Canvas (700,700);
@@ -162,14 +162,8 @@ public class View extends Application
 
 				if(board.isPiece(xT,yT)) //befuellen, wenn piece
 				{
-					if (menu.getButtonGreen() == true){
-						// Bild des Piece holen, neu skalieren und infoStage
-						// setzen
-						ImageView aktPiece = new ImageView(board.getImage(xT, yT));
-						aktPiece.setScaleX(2.5);
-						aktPiece.setScaleY(2.5);
-						
-					}
+					info.removeAbilityLabels();
+					info.showInfo(board.getPiece(xT, yT));
 				}
 			}
 		});

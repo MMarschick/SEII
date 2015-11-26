@@ -12,16 +12,15 @@ public class GameParser
 {
 	//Standart-ParseString; wird für den Aufbau eines neuen Boards zu Beginn eines neuen Spiels verwendet
 	public static final String DEFAULT_STRING=""
-			+ "~0-0-t-e-6-0-~0-1-p-e-6-0-~0-7-p-g-2-0-~0-8-t-g-6-0-"
-			+ "~1-0-n-e-6-0-~1-1-p-e-6-0-~1-7-p-g-2-0-~1-8-n-g-6-0-"
-			+ "~2-0-a-e-6-0-~2-1-p-e-6-0-~2-7-p-g-2-0-~2-8-a-g-6-0-"
-			+ "~3-0-q-e-6-0-~3-1-p-e-6-0-~3-7-p-g-2-0-~3-8-q-g-6-0-"
-			+ "~4-0-k-e-6-0-~4-1-p-e-6-0-~4-7-p-g-2-0-~4-8-k-g-6-0-"
-			+ "~5-0-s-e-6-0-~5-1-p-e-6-0-~5-7-p-g-2-0-~5-8-s-g-6-0-"
-			+ "~6-0-a-e-6-0-~6-1-p-e-6-0-~6-7-p-g-2-0-~6-8-a-g-6-0-"
-			+ "~7-0-n-e-6-0-~7-1-p-e-6-0-~7-7-p-g-2-0-~7-8-n-g-6-0-"
-			+ "~8-0-t-e-6-0-~8-1-p-e-6-0-~8-7-p-g-2-0-~8-8-t-g-6-0-"
-			+ "&";
+			+ "~0-0-t-e-6-0-f_3+p_2~0-1-p-e-2-0-~0-7-p-g-2-0-~0-8-t-g-6-0-"
+			+ "~1-0-n-e-3-0-a_4+t_8~1-1-p-e-2-0-~1-7-p-g-2-0-~1-8-n-g-3-0-"
+			+ "~2-0-a-e-3-0-~2-1-p-e-2-0-~2-7-p-g-2-0-~2-8-a-g-3-0-"
+			+ "~3-0-q-e-4-0-~3-1-p-e-2-0-~3-7-p-g-2-0-~3-8-q-g-4-0-"
+			+ "~4-0-k-e-10-0-~4-1-p-e-2-0-~4-7-p-g-2-0-~4-8-k-g-10-0-"
+			+ "~5-0-s-e-3-0-~5-1-p-e-2-0-~5-7-p-g-2-0-~5-8-s-g-3-0-"
+			+ "~6-0-a-e-3-0-~6-1-p-e-2-0-~6-7-p-g-2-0-~6-8-a-g-3-0-"
+			+ "~7-0-n-e-3-0-~7-1-p-e-2-0-~7-7-p-g-2-0-~7-8-n-g-3-0-"
+			+ "~8-0-t-e-6-0-~8-1-p-e-2-0-~8-7-p-g-2-0-~8-8-t-g-6-0-";
 
 	public static String parsePiece(Piece currPiece)
 	{
@@ -40,7 +39,7 @@ public class GameParser
 		switch(currPiece.getCharacterAlliance())
 		{
 		case GOOD: parseString+="g";break;
-		case EVIL:parseString+="e";break;
+		case EVIL: parseString+="e";break;
 		}
 		parseString+="-"+currPiece.getHealth();
 		parseString+="-"+currPiece.getAbilityCooldown();
@@ -56,7 +55,6 @@ public class GameParser
 				case AVATAR: parseString+="a"+"_"+se.getRemainingDuration();
 				case TAUNT: parseString+="t"+"_"+se.getRemainingDuration();
 				case SAVAGERY: parseString+="s"+"_"+se.getRemainingDuration();
-				case DEAD: parseString+="d";
 				}
 				parseString+="+";
 			}
@@ -67,7 +65,6 @@ public class GameParser
 	public static String parseString(Board board)
 	{
 		Piece[][] felder=board.getFelder();
-		ArrayList<Piece> deadPieces=board.getDeadPieces();
 		String parseString="";
 		Piece currPiece;
 		for(int x=0;x<9;x++)
@@ -81,18 +78,12 @@ public class GameParser
 				}
 			}	
 		}
-		parseString+="&";
-		for(Piece deadPiece : deadPieces)
-		{
-			parseString+=parsePiece(deadPiece);
-		}
 		return parseString;
 	}
 
-	public static void parseBoard(String parseString, Piece[][] felder, ArrayList<Piece> deadPieces)
+	public static void parseBoard(String parseString, Piece[][] felder)
 	{
-		String[] pieceGroups = parseString.split(Pattern.quote("&"));
-		String[] pieces = pieceGroups[0].split(Pattern.quote("~"));
+		String[] pieces = parseString.split(Pattern.quote("~"));
 
 		for(String pieceString : pieces)
 		{
@@ -136,43 +127,13 @@ public class GameParser
 						case "t": statusEffects.add(new StatusEffect(Ability.TAUNT, remainingDuration));break;
 						case "s": statusEffects.add(new StatusEffect(Ability.SAVAGERY, remainingDuration));break;
 						}
+						// (.Y.)
 
 					}
 				}
 				PieceFactory pf=new PieceFactory();
 				felder[xk][yk]=pf.getPiece(pt, characterAlliance, health, abilityCooldown, statusEffects);
 			}
-		}
-
-		if(pieceGroups.length<2)return;
-		pieces = pieceGroups[1].split(Pattern.quote("~"));
-		for(String pieceString : pieces)
-		{
-			String[] attributes=pieceString.split(Pattern.quote("-"));
-			PieceType pt=null;
-			switch(attributes[0])
-			{
-			case "p": pt=PieceType.PEASANT;break;
-			case "k": pt=PieceType.KING;break;
-			case "a": pt=PieceType.ARCHER;break;
-			case "t": pt=PieceType.TAUNT;break;
-			case "s": pt=PieceType.SPECIAL;break;
-			case "q": pt=PieceType.QUEEN;break;
-			case "n": pt=PieceType.KNIGHT;break;
-			}
-			Alliance characterAlliance=null;
-			switch(attributes[1])
-			{
-			case "g": characterAlliance= Alliance.GOOD;break;
-			case "e": characterAlliance=Alliance.EVIL;break;
-			}
-			int health=Integer.parseInt(attributes[2]);
-			int abilityCooldown=Integer.parseInt(attributes[3]);
-			if(attributes.length<8)continue;
-			ArrayList<StatusEffect> statusEffects=new ArrayList<StatusEffect>();
-			statusEffects.add(new StatusEffect(Ability.DEAD, 0));
-			PieceFactory pf=new PieceFactory();
-			deadPieces.add(pf.getPiece(pt, characterAlliance, health, abilityCooldown, statusEffects));
 		}
 	}
 }

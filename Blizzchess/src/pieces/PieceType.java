@@ -37,4 +37,7 @@ public enum PieceType
 	public String getNameEvil() { return nameEvil;}
 	public Ability getAbilityGood() { return abilityGood;}
 	public Ability getAbilityEvil() { return abilityEvil;}
+	public int getAttackValue() {return attackValue;}
+	public int getMaxHealth() {return maxHealth;}
+	
 }

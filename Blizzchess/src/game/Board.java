@@ -13,7 +13,6 @@ import pieces.*;
 public class Board 
 {
 	private Piece felder[][] = new Piece[9][9]; //enthaelt Pieces mit der Koordinate als Index
-	private ArrayList<Piece> deadPieces;
 	private ArrayList<Integer> possibleMove;
 	private ArrayList<Integer> possibleTarget;
 	private Alliance myAlliance=Alliance.GOOD;
@@ -23,15 +22,14 @@ public class Board
 	//Konstruktor; erstellt aus einem parseString ein Bord; fügt das Board-Icon der View hinzu
 	public Board(BorderPane root, String parseString)
 	{
-		board = new Image("board.png"); //Spielbrett
+		board = new Image("Board.png"); //Spielbrett
 		icon = new ImageView(board);
-		this.deadPieces=new ArrayList<Piece>();
 		this.possibleMove=new ArrayList<Integer>();
 		this.possibleTarget=new ArrayList<Integer>();
 
 		root.getChildren().add(getIcon()); //Aenderung, da sonst Brett ueber Pieces
 
-		GameParser.parseBoard(parseString, felder, deadPieces);
+		GameParser.parseBoard(parseString, felder);
 		for(int i=0;i<9;i++)
 		{
 			for(int j=0;j<9;j++)
@@ -72,7 +70,6 @@ public class Board
 	//Getter
 	public Piece getPiece(int x, int y){return felder[x][y];}
 	public Piece[][] getFelder(){return felder;}
-	public ArrayList<Piece> getDeadPieces(){return deadPieces;}
 	public Alliance getMyAlliance(){return myAlliance;}
 	public Image getBoard(){return board;}
 	public ImageView getIcon(){return icon;}

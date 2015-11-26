@@ -116,6 +116,8 @@ public class Login
 		pw.setTextFill(Color.WHITE);
 		grid.add(pw, 0, 15);
 		
+		
+		
 		pwBox = new PasswordField();
 		grid.add(pwBox, 3, 15);
 			
