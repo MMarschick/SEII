@@ -64,7 +64,7 @@ public class Info {
 		labels[0].setText("Current Health: " + piece.getHealth());
 		labels[1].setText("Max Health: " + piece.getPieceT().getMaxHealth());
 		labels[2].setText("Ability Cooldown: " + piece.getAbilityCooldown());
-		for (int i=0;i<piece.getStatusEffects().size();i++){
+		for (int i=0;i<piece.getStatusEffects().size()-1;i++){
 			labels[i+3].setText(piece.getStatusEffects().get(i).getAbility().getStatusName()+"/"+
 								piece.getStatusEffects().get(i).getAbility().getDuration());
 		}

@@ -13,13 +13,17 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.stage.WindowEvent;
 import pieces.Alliance;
+import pieces.StatusEffect;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import game.*;
@@ -50,6 +54,7 @@ public class View extends Application
 	//Klassen der Stages
 	Menu menu = new Menu();
 	Info info = new Info();
+
 	
 	int turnState=0;
 	Alliance whoseTurn=Alliance.GOOD;
@@ -58,6 +63,9 @@ public class View extends Application
 
 	ArrayList<Integer> possibleMove;
 	ArrayList<Integer> possibleTarget;
+	
+	
+	
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -131,6 +139,7 @@ public class View extends Application
 		Scene scene = new Scene(root, 440, 440);
 		primaryStage.setScene(scene);
 		Board board = new Board(root, GameParser.DEFAULT_STRING);
+		
 
 		Arrays.toString(board.getFelder());
 
@@ -150,6 +159,9 @@ public class View extends Application
 
 		root.getChildren().add(canvasGreen);
 		root.getChildren().add(canvasRed);
+		
+		
+		
 
 		
 		//Event um die infoStage zu befuellen und anzuzeigen
@@ -177,6 +189,7 @@ public class View extends Application
 			{
 				System.out.println(turnState);
 				System.out.println(whoseTurn);
+				whoseTurn=Alliance.GOOD;
 				if(whoseTurn==board.getMyAlliance())
 				{
 					//Switch-Case in Game
@@ -185,7 +198,8 @@ public class View extends Application
 					case 0: //Spieler ist in einem neuen Spielzug
 						x = (int)(event.getX()-board.getIcon().getX())/50;
 						y = (int)(event.getY()-board.getIcon().getY())/50;
-						if(board.isMyPiece(x,y))
+						//if(board.isMyPiece(x,y))
+						if(board.isPiece(x,y))
 						{
 							board.calculateMovement(x, y);
 							board.calculateTargets(x, y);
@@ -268,9 +282,11 @@ public class View extends Application
 						//Sobald ein Piece sich bewegt hat, muessen die gezeichneten Quadrate entfernt werden
 						//Canvas wird anschliessend entfernt
 						gcGreen.clearRect(canvasGreen.getLayoutX(),canvasGreen.getLayoutY(), canvasGreen.getWidth(), canvasGreen.getHeight());
+						
+						board.update(xNew,yNew,board.getPiece(xNew, yNew));
 						break;
 
-					case 2:
+					case 2: //Piece hat sich bewegt
 						xNew = (int)(event.getX()-board.getIcon().getX())/50; //neue x-Koordinate
 						yNew = (int)(event.getY()-board.getIcon().getY())/50; //neue y-Koordinate
 						koordInt=(xNew*10+yNew);
@@ -285,6 +301,7 @@ public class View extends Application
 								gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
 							}
 						}
+						
 
 						break;
 					}

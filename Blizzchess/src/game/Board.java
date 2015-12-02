@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import pieces.*;
 
 public class Board 
@@ -18,7 +21,8 @@ public class Board
 	private Alliance myAlliance=Alliance.GOOD;
 	private ImageView icon;
 	private Image board;
-
+	Pane pane = new Pane();
+	
 	//Konstruktor; erstellt aus einem parseString ein Bord; fügt das Board-Icon der View hinzu
 	public Board(BorderPane root, String parseString)
 	{
@@ -27,8 +31,12 @@ public class Board
 		this.possibleMove=new ArrayList<Integer>();
 		this.possibleTarget=new ArrayList<Integer>();
 
-		root.getChildren().add(getIcon()); //Aenderung, da sonst Brett ueber Pieces
+		root.getChildren().add(icon); //Aenderung, da sonst Brett ueber Pieces
+		
+		
 
+
+//		Aufbau der Views
 		GameParser.parseBoard(parseString, felder);
 		for(int i=0;i<9;i++)
 		{
@@ -36,12 +44,60 @@ public class Board
 			{
 				if(felder[i][j]!=null)
 				{
+					//PieceViews
 					Piece currPiece=felder[i][j];
 					root.getChildren().add(currPiece.getIcon());
-					currPiece.getIcon().setX(i*50+5);
-					currPiece.getIcon().setY(j*50+5);
+					
+					//AvatarViews
+					root.getChildren().add(currPiece.getAvatarView());
+					
+					//SavageryViews
+					root.getChildren().add(currPiece.getSavageryView());
+					
+					//PoisonViews
+					root.getChildren().add(currPiece.getPoisonView());
+					
+					//TauntingViews
+					root.getChildren().add(currPiece.getTauntingView());
+					
+					//FrozenViews
+					root.getChildren().add(currPiece.getFreezeView());
+					
+					//HealthViews
+					root.getChildren().add(currPiece.getHealthView());
+					
+					pane.getChildren().add(currPiece.getHealthLabel());
+					update(i, j, currPiece);
 				}
 			}
+		}
+		root.getChildren().add(pane);
+	}
+
+	public void update(int i, int j, Piece currPiece) {
+		
+		currPiece.getIcon().setX(i*50+5);
+		currPiece.getIcon().setY(j*50+5);
+		currPiece.getAvatarView().setX(i*50);
+		currPiece.getAvatarView().setY(j*50);
+		currPiece.getSavageryView().setX(i*50);
+		currPiece.getSavageryView().setY(j*50);
+		currPiece.getPoisonView().setX(i*50-5);
+		currPiece.getPoisonView().setY(j*50+20);
+		currPiece.getTauntingView().setX(i*50);
+		currPiece.getTauntingView().setY(j*50);
+		currPiece.getFreezeView().setX(i*50);
+		currPiece.getFreezeView().setY(j*50);
+		currPiece.getHealthView().setX(i*50+25);
+		currPiece.getHealthView().setY(j*50+25);
+		
+		if (currPiece.getHealth() < 10) {
+			currPiece.getHealthLabel().setTranslateX(i * 50 + 34);
+			currPiece.getHealthLabel().setTranslateY(j * 50 + 30);
+		}
+		else{
+			currPiece.getHealthLabel().setTranslateX(i * 50 + 34);
+			currPiece.getHealthLabel().setTranslateY(j * 50 + 27);
 		}
 	}
 	
@@ -61,10 +117,17 @@ public class Board
 	//Methode zum Verschieben eines Pieces im Array "felder"
 	public void setPiece(int x, int y, int kx, int ky)
 	{
+		//PieceViews
 		felder[x][y].getIcon().setX(kx*50+5);
 		felder[x][y].getIcon().setY(ky*50+5);
+		
+		//weitere Views wie Poisened
+		//...
+		
+		//Arryanpassung
 		felder[kx][ky]=felder[x][y];
 		felder[x][y]=null;
+		
 	}
 
 	//Getter
@@ -77,7 +140,7 @@ public class Board
 	public ArrayList<Integer> getPossibleMove(){return possibleMove;}
 	public ArrayList<Integer> getPossibleTarget(){return possibleTarget;}
 
-	//Berechnet alle Ziele dem dem Piece an der Stelle x,y im Array Felder zur Verfügung stehen
+	//Berechnet alle Ziele die dem Piece an der Stelle x,y im Array Felder zur Verfügung stehen
 	public void calculateTargets(int x, int y)
 	{
 
@@ -108,6 +171,7 @@ public class Board
 				if(i==0) continue;
 				if(inBoundary(x, y+i) && isPiece(x, y+i)) possibleTarget.add((x)*10+y+i);
 			}
+			break;
 		default:
 			for(int i=-1;i<2;i++)
 			{
@@ -378,7 +442,9 @@ public class Board
 				}
 			}
 		}
+		
 	}
+	
 
 	//Gibt zurück, ob ein Koordinatenpaar in den Grenzen des Schachfeldes(9x9) liegt
 	public static boolean inBoundary(int x, int y)
@@ -386,6 +452,8 @@ public class Board
 		if(x<=8 && y<=8 && x>=0 && y>=0)return true;
 		else return false;
 	}
+	
+	
 }
 
 

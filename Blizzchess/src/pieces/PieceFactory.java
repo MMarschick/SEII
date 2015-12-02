@@ -1,6 +1,8 @@
 package pieces;
 import java.util.ArrayList;
 
+import javafx.collections.ObservableList;
+
 
 //Factory zum Erstellen von Pieces, wird verwendet um Pfade nicht in der Klasse Pieces speichern zu müssen
 public class PieceFactory 
@@ -38,7 +40,7 @@ public class PieceFactory
 	}
 	
 	//Erstellt ein Piece nach den übergebenen Daten und gibt es zurück
-	public Piece getPiece(PieceType pieceType, Alliance characterAlliance, int health, int abilityCooldown, ArrayList<StatusEffect> statusEffects)
+	public Piece getPiece(PieceType pieceType, Alliance characterAlliance, int health, int abilityCooldown, ObservableList<StatusEffect> statusEffects)
 	{
 		String imagePath="";
 		switch(characterAlliance)
@@ -54,16 +56,17 @@ public class PieceFactory
 			case QUEEN: imagePath=pathsG[5];break;
 			case KNIGHT: imagePath=pathsG[6];break;
 			}
+			break;
 		case EVIL:
 			switch(pieceType)
 			{
-			case PEASANT: imagePath=pathsG[0];break;
-			case KING: imagePath=pathsG[1];break;
-			case ARCHER: imagePath=pathsG[2];break;
-			case TAUNT: imagePath=pathsG[3];break;
-			case SPECIAL: imagePath=pathsG[4];break;
-			case QUEEN: imagePath=pathsG[5];break;
-			case KNIGHT: imagePath=pathsG[6];break;
+			case PEASANT: imagePath=pathsE[0];break;
+			case KING: imagePath=pathsE[1];break;
+			case ARCHER: imagePath=pathsE[2];break;
+			case TAUNT: imagePath=pathsE[3];break;
+			case SPECIAL: imagePath=pathsE[4];break;
+			case QUEEN: imagePath=pathsE[5];break;
+			case KNIGHT: imagePath=pathsE[6];break;
 			}
 		}
 		return new Piece(health, abilityCooldown, characterAlliance, statusEffects, pieceType, imagePath);

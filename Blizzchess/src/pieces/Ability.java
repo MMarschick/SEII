@@ -2,7 +2,9 @@ package pieces;
 
 public enum Ability 
 {
-	HOOK(0, 3, 4, 0, ""), POISON(1, 0, 1, 4, "Poisened"), HEAL(100, 3, 1, 0, ""), FREEZE(0, 2, 1, 2, "Frozen"), AVATAR(5, 5, 0, 3, "Avatar"), /*ROOT(0, 2, 2, 2),*/ WHIRLWIND(3, 1, 1, 0, ""), TAUNT(0, 2, 1, 1,"Taunting"), SAVAGERY(2, 2, 4, 2, "Savage");
+	HOOK(0, 3, 4, 0, ""), POISON(1, 0, 1, 4, "Poisoned"), HEAL(100, 3, 1, 0, ""), 
+	FREEZE(0, 2, 1, 2, "Frozen"), AVATAR(5, 5, 0, 3, "Avatar"),WHIRLWIND(3, 1, 1, 0, ""),
+	TAUNT(0, 2, 1, 1,"Taunting"), SAVAGERY(2, 2, 4, 2, "Savage");
 	
 	private int damage;
 	private int cooldown;
