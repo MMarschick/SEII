@@ -156,9 +156,17 @@ public class View extends Application
 		GraphicsContext gcRed = canvasRed.getGraphicsContext2D();
 		gcRed.setStroke(Color.rgb(255, 0, 0, 0.9));
 		gcRed.setLineWidth(3);
+		
+		//Setzen des Canvas (Zeichner) für angreifbare Felder
+		final Canvas canvasOrchid = new Canvas (700,700);
+		canvasRed.setStyle("-fx-border-color: darkorchid;");
+		GraphicsContext gcOrchid = canvasRed.getGraphicsContext2D();
+		gcRed.setStroke(Color.DARKORCHID);
+		gcRed.setLineWidth(3);
 
 		root.getChildren().add(canvasGreen);
 		root.getChildren().add(canvasRed);
+		root.getChildren().add(canvasOrchid);
 		
 		
 		
@@ -187,125 +195,140 @@ public class View extends Application
 			//Aufbau/Kontrolle eines Spielzuges
 			public void handle(MouseEvent event) 
 			{
-				System.out.println(turnState);
-				System.out.println(whoseTurn);
 				whoseTurn=Alliance.GOOD;
 				if(whoseTurn==board.getMyAlliance())
 				{
-					//Switch-Case in Game
-					switch(turnState)
+					handleTurn(board, canvasGreen, gcGreen, canvasRed, gcRed, event);
+				}
+			}
+
+			private void handleTurn(Board board, final Canvas canvasGreen, GraphicsContext gcGreen,
+					final Canvas canvasRed, GraphicsContext gcRed, MouseEvent event) {
+				//Switch-Case in Game
+				switch(turnState)
+				{
+				case 0: //Spieler ist in einem neuen Spielzug
+					x = (int)(event.getX()-board.getIcon().getX())/50;
+					y = (int)(event.getY()-board.getIcon().getY())/50;
+					//if(board.isMyPiece(x,y))
+					if(board.isPiece(x,y))
 					{
-					case 0: //Spieler ist in einem neuen Spielzug
-						x = (int)(event.getX()-board.getIcon().getX())/50;
-						y = (int)(event.getY()-board.getIcon().getY())/50;
-						//if(board.isMyPiece(x,y))
-						if(board.isPiece(x,y))
+						board.calculateMovement(x, y);
+						board.calculateTargets(x, y);
+
+						possibleMove=board.getPossibleMove();
+						possibleTarget=board.getPossibleTarget();
+						turnState=1;
+						
+						gcOrchid.strokeRect(x*50, y*50, 50, 50);
+						
+						for(Integer movementInt : possibleMove)
 						{
-							board.calculateMovement(x, y);
+							int greenX = movementInt/10;
+							int greenY = movementInt%10;
+							gcGreen.strokeRect(greenX*50, greenY*50, 50, 50);
+						}
+						for(Integer targetInt : possibleTarget)
+						{
+							int redX = targetInt/10;
+							int redY = targetInt%10;
+							gcRed.strokeRect(redX*50, redY*50, 50, 50);
+						}
+						//root.getChildren().add(canvasGreen);
+						//root.getChildren().add(canvasRed);
+					}
+					break;
+				case 1: //Spieler hat ein Piece angeklickt
+
+					xNew = (int)(event.getX()-board.getIcon().getX())/50; //neue x-Koordinate
+					yNew = (int)(event.getY()-board.getIcon().getY())/50; //neue y-Koordinate
+					int koordInt=(xNew*10+yNew);
+					turnState=3;
+
+					for(Integer movementInt : possibleMove)
+					{
+						if(koordInt==movementInt)
+						{
+							board.setPiece(x, y, xNew, yNew);
+							x=xNew;
+							y=yNew;
+							turnState=2;
 							board.calculateTargets(x, y);
-
-							possibleMove=board.getPossibleMove();
 							possibleTarget=board.getPossibleTarget();
-							turnState=1;
-
-							for(Integer movementInt : possibleMove)
+							if(possibleTarget.isEmpty())
 							{
-								int greenX = movementInt/10;
-								int greenY = movementInt%10;
-								gcGreen.strokeRect(greenX*50, greenY*50, 50, 50);
+								gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
+								turnState=0;
+								if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
+								else whoseTurn=Alliance.GOOD;
+								break;
 							}
+
+							gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
+							gcOrchid.clearRect(canvasOrchid.getLayoutX(),canvasOrchid.getLayoutY(), canvasOrchid.getWidth(), canvasOrchid.getHeight());
+
 							for(Integer targetInt : possibleTarget)
 							{
 								int redX = targetInt/10;
 								int redY = targetInt%10;
 								gcRed.strokeRect(redX*50, redY*50, 50, 50);
 							}
-							//root.getChildren().add(canvasGreen);
-							//root.getChildren().add(canvasRed);
 						}
-						break;
-					case 1: //Spieler hat ein Piece angeklickt
-
-						xNew = (int)(event.getX()-board.getIcon().getX())/50; //neue x-Koordinate
-						yNew = (int)(event.getY()-board.getIcon().getY())/50; //neue y-Koordinate
-						int koordInt=(xNew*10+yNew);
-						turnState=3;
-
-						for(Integer movementInt : possibleMove)
-						{
-							if(koordInt==movementInt)
-							{
-								board.setPiece(x, y, xNew, yNew);
-								x=xNew;
-								y=yNew;
-								turnState=2;
-								board.calculateTargets(x, y);
-								possibleTarget=board.getPossibleTarget();
-								if(possibleTarget.isEmpty())
-								{
-									gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
-									turnState=0;
-									if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
-									else whoseTurn=Alliance.GOOD;
-									break;
-								}
-
-								gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
-
-								for(Integer targetInt : possibleTarget)
-								{
-									int redX = targetInt/10;
-									int redY = targetInt%10;
-									gcRed.strokeRect(redX*50, redY*50, 50, 50);
-								}
-							}
-						}
-						for(Integer targetInt : possibleTarget)
-						{
-							if(koordInt==targetInt)
-							{
-								gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
-								//attacke
-								turnState=0;
-								//gameState
-								if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
-								else whoseTurn=Alliance.GOOD;
-							}
-						}
-
-						if(turnState==3)
+					}
+					for(Integer targetInt : possibleTarget)
+					{
+						if(koordInt==targetInt)
 						{
 							gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
+							
+							//attacke
+							attack(board);
+							
 							turnState=0;
+							//gameState
+							if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
+							else whoseTurn=Alliance.GOOD;
 						}
-
-						//Sobald ein Piece sich bewegt hat, muessen die gezeichneten Quadrate entfernt werden
-						//Canvas wird anschliessend entfernt
-						gcGreen.clearRect(canvasGreen.getLayoutX(),canvasGreen.getLayoutY(), canvasGreen.getWidth(), canvasGreen.getHeight());
-						
-						board.update(xNew,yNew,board.getPiece(xNew, yNew));
-						break;
-
-					case 2: //Piece hat sich bewegt
-						xNew = (int)(event.getX()-board.getIcon().getX())/50; //neue x-Koordinate
-						yNew = (int)(event.getY()-board.getIcon().getY())/50; //neue y-Koordinate
-						koordInt=(xNew*10+yNew);
-						for(Integer targetInt : possibleTarget)
-						{
-							if(koordInt==targetInt)
-							{
-								//attacke
-								turnState=0;
-								if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
-								else whoseTurn=Alliance.GOOD;
-								gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
-							}
-						}
-						
-
-						break;
 					}
+
+					if(turnState==3)
+					{
+						gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
+						turnState=0;
+					}
+
+					//Sobald ein Piece sich bewegt hat, muessen die gezeichneten Quadrate entfernt werden
+					//Canvas wird anschliessend entfernt
+					gcGreen.clearRect(canvasGreen.getLayoutX(),canvasGreen.getLayoutY(), canvasGreen.getWidth(), canvasGreen.getHeight());
+					
+					board.update(xNew,yNew,board.getPiece(xNew, yNew));
+					break;
+
+				case 2: //Piece hat sich bewegt
+					xNew = (int)(event.getX()-board.getIcon().getX())/50; //neue x-Koordinate
+					yNew = (int)(event.getY()-board.getIcon().getY())/50; //neue y-Koordinate
+					koordInt=(xNew*10+yNew);
+					for(Integer targetInt : possibleTarget)
+					{
+						if(koordInt==targetInt)
+						{
+							//attacke
+							attack(board);
+							board.getPiece(xNew, yNew).setHealthLabel(board.getPiece(xNew, yNew).getHealth());
+							turnState=0;
+							if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
+							else whoseTurn=Alliance.GOOD;
+							gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
+						}
+					}
+					
+
+					break;
 				}
+			}
+
+			private void attack(Board board) {
+				board.getPiece(xNew, yNew).setHealth(board.getPiece(xNew, yNew).getHealth()-board.getPiece(x, y).getPieceT().getAttackValue());
 			}
 		});
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {

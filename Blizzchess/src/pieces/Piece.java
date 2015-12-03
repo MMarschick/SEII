@@ -110,8 +110,14 @@ public class Piece
 	public ImageView getSavageryView() {return savageryView;}
 	public ImageView getHealthView() {return healthView;}
 	public Label getHealthLabel() {return healthLabel;}
+	public void setHealth(int health) {this.health = health;}
 	//	public int attack(int thisX, int thisY, int targetX, int targetY);
 	//	public int receiveAttack(int damageReceived);
+
+	public void setHealthLabel(int h) {
+		healthLabel.setText(h>=10?""+h/10+"\n"+h%10:""+h);
+		
+	}
 }
 
 

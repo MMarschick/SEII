@@ -75,29 +75,31 @@ public class Board
 	}
 
 	public void update(int i, int j, Piece currPiece) {
-		
-		currPiece.getIcon().setX(i*50+5);
-		currPiece.getIcon().setY(j*50+5);
-		currPiece.getAvatarView().setX(i*50);
-		currPiece.getAvatarView().setY(j*50);
-		currPiece.getSavageryView().setX(i*50);
-		currPiece.getSavageryView().setY(j*50);
-		currPiece.getPoisonView().setX(i*50-5);
-		currPiece.getPoisonView().setY(j*50+20);
-		currPiece.getTauntingView().setX(i*50);
-		currPiece.getTauntingView().setY(j*50);
-		currPiece.getFreezeView().setX(i*50);
-		currPiece.getFreezeView().setY(j*50);
-		currPiece.getHealthView().setX(i*50+25);
-		currPiece.getHealthView().setY(j*50+25);
-		
-		if (currPiece.getHealth() < 10) {
-			currPiece.getHealthLabel().setTranslateX(i * 50 + 34);
-			currPiece.getHealthLabel().setTranslateY(j * 50 + 30);
-		}
-		else{
-			currPiece.getHealthLabel().setTranslateX(i * 50 + 34);
-			currPiece.getHealthLabel().setTranslateY(j * 50 + 27);
+
+		if (isPiece(i, j)) {
+			currPiece.getIcon().setX(i * 50 + 5);
+			currPiece.getIcon().setY(j * 50 + 5);
+			currPiece.getAvatarView().setX(i * 50);
+			currPiece.getAvatarView().setY(j * 50);
+			currPiece.getSavageryView().setX(i * 50);
+			currPiece.getSavageryView().setY(j * 50);
+			currPiece.getPoisonView().setX(i * 50 - 5);
+			currPiece.getPoisonView().setY(j * 50 + 20);
+			currPiece.getTauntingView().setX(i * 50);
+			currPiece.getTauntingView().setY(j * 50);
+			currPiece.getFreezeView().setX(i * 50);
+			currPiece.getFreezeView().setY(j * 50);
+			currPiece.setHealthLabel(currPiece.getHealth());
+			currPiece.getHealthView().setX(i * 50 + 25);
+			currPiece.getHealthView().setY(j * 50 + 25);
+
+			if (currPiece.getHealth() < 10) {
+				currPiece.getHealthLabel().setTranslateX(i * 50 + 34);
+				currPiece.getHealthLabel().setTranslateY(j * 50 + 30);
+			} else {
+				currPiece.getHealthLabel().setTranslateX(i * 50 + 34);
+				currPiece.getHealthLabel().setTranslateY(j * 50 + 27);
+			}
 		}
 	}
 	
@@ -113,6 +115,14 @@ public class Board
 		if(isPiece(x,y) && felder[x][y].getCharacterAlliance()==myAlliance)return true;
 		else return false;
 	}
+	
+	//Überprüft ob an der Stelle x,y im Array felder ein Piece der Gegner-Fraktion des Spielers steht
+	public boolean isEnemyPiece(int x, int y)
+	{
+		if(isPiece(x,y) && !(felder[x][y].getCharacterAlliance()==myAlliance))return true;
+		else return false;
+	}
+
 
 	//Methode zum Verschieben eines Pieces im Array "felder"
 	public void setPiece(int x, int y, int kx, int ky)
@@ -151,25 +161,25 @@ public class Board
 		case PEASANT: 
 			if(currP.getCharacterAlliance()==Alliance.GOOD)
 			{
-				if(inBoundary(x-1, y-1) && isPiece(x-1, y-1)) possibleTarget.add((x-1)*10+y-1);
-				if(inBoundary(x+1, y-1) && isPiece(x+1, y-1)) possibleTarget.add((x+1)*10+y-1);
+				if(inBoundary(x-1, y-1) && isEnemyPiece(x-1, y-1)) possibleTarget.add((x-1)*10+y-1);
+				if(inBoundary(x+1, y-1) && isEnemyPiece(x+1, y-1)) possibleTarget.add((x+1)*10+y-1);
 			}
 			else
 			{
-				if(inBoundary(x-1, y+1) && isPiece(x-1, y+1)) possibleTarget.add((x-1)*10+y+1);
-				if(inBoundary(x+1, y+1) && isPiece(x+1, y+1)) possibleTarget.add((x+1)*10+y+1);
+				if(inBoundary(x-1, y+1) && isEnemyPiece(x-1, y+1)) possibleTarget.add((x-1)*10+y+1);
+				if(inBoundary(x+1, y+1) && isEnemyPiece(x+1, y+1)) possibleTarget.add((x+1)*10+y+1);
 			}
 			break;
 		case ARCHER:
 			for(int i=-3;i<4;i++)
 			{
 				if(i==0) continue;
-				if(inBoundary(x+i, y) && isPiece(x+i, y)) possibleTarget.add((x+i)*10+y);
+				if(inBoundary(x+i, y) && isEnemyPiece(x+i, y)) possibleTarget.add((x+i)*10+y);
 			}
 			for(int i=-3;i<4;i++)
 			{
 				if(i==0) continue;
-				if(inBoundary(x, y+i) && isPiece(x, y+i)) possibleTarget.add((x)*10+y+i);
+				if(inBoundary(x, y+i) && isEnemyPiece(x, y+i)) possibleTarget.add((x)*10+y+i);
 			}
 			break;
 		default:
@@ -178,7 +188,7 @@ public class Board
 				for(int j=-1;j<2;j++)
 				{
 					if(i==0 && j==0) continue;
-					if(inBoundary(x+i, y+j) && isPiece(x+i, y+j)) possibleTarget.add((x+i)*10+y+j);
+					if(inBoundary(x+i, y+j) && isEnemyPiece(x+i, y+j)) possibleTarget.add((x+i)*10+y+j);
 				}
 			}
 		}
