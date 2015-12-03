@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.regex.Pattern;
  
 public class Client
 {
@@ -18,6 +19,8 @@ public class Client
     private String playerPW;	  //Passwort eines Players
     private BufferedWriter bw;	  //BufferedWriter zum Senden an Server
     private BufferedReader br;    //BufferedReader zum Empfangen von Server
+    
+    private String opponentName;
     
     //Setter-Methoden
     public void setPlayerName(String playerName)
@@ -196,22 +199,36 @@ public class Client
 //    	return false;
 //    }
     
-    public boolean searchGame()
+    public String searchGame()
     {
     	//turn
     	sendMessage("searchGame", playerName);
     	try
     	{
-    		if(br.readLine().equals("true"))
+    		String[] returnMessage = br.readLine().split(Pattern.quote("|"));
+    		if(returnMessage[0].equals("true"))
     		{
-    			return true;
+    			if(returnMessage[1].equals(playerName))
+    			{
+    				opponentName=returnMessage[2];
+    			}
+    			else
+    			{
+    				opponentName=returnMessage[1];
+    			}
+    			if(returnMessage[3].equals(playerName))
+    				return returnMessage[4];
+    			else
+    			{
+    				return "wait";
+    			}
     		}
     	}
     	catch(Exception e)
     	{
     		System.out.println(e.getMessage());
     	}
-    	return false;
+    	return "false";
     }
     
     //in newGame:
@@ -220,21 +237,21 @@ public class Client
     //bei 2 if abfragen überprüfen, ob es erfolgreich ist
     //(update wurde ausgeführt; spiel ist bereits vorhanden)
     //dann return true;;; vllt doch gameString? + PlayerOne + PlayerTwo? + Turn?
-    public boolean waitForGame()
+    public String waitForGame()
     {
-    	sendMessage("waitForGame", playerName);
+    	sendMessage("waitForGame", playerName+"|"+opponentName);
     	try
     	{
     		if(br.readLine().equals("true"))
     		{
-    			return true;
+    			return "true";
     		}
     	}
     	catch(Exception e)
     	{
     		System.out.println(e.getMessage());
     	}
-    	return false;
+    	return "false";
     }
     
 //    case "searchGame":

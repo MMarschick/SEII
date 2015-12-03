@@ -15,6 +15,7 @@ import javafx.stage.StageStyle;
 
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
+import java.util.regex.Pattern;
 
 import connection.Client;
 import game.Board;
@@ -154,9 +155,19 @@ public class View extends Application
 		{
 			public void handle(ActionEvent ae)
 			{
-				gameSelect.closeStage();
-				primaryStage.show();
-				menu.showStage();
+				String[] newGame = player.searchGame().split(Pattern.quote("|"));
+				switch(newGame[0])
+				{
+					case "wait":break;
+					case "false":break;
+					case "defaultString":System.out.println("Baue Board auf");break;
+				}
+				
+				
+//				gameSelect.closeStage();
+//				primaryStage.show();
+//				menu.showStage();
+				
 			}
 		});
 		
