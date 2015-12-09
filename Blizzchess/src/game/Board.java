@@ -5,101 +5,152 @@
 package game;
 
 import java.util.ArrayList;
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import pieces.*;
 
 public class Board 
 {
 	private Piece felder[][] = new Piece[9][9]; //enthaelt Pieces mit der Koordinate als Index
-	private Piece pieces[] = new Piece[36];     //enthaelt die Pieces
 	private ArrayList<Integer> possibleMove;
 	private ArrayList<Integer> possibleTarget;
-
+	private Alliance myAlliance=Alliance.GOOD;
 	private ImageView icon;
 	private Image board;
-
-	public Board(BorderPane root )
+	Pane pane = new Pane();
+	
+	//Konstruktor; erstellt aus einem parseString ein Bord; fügt das Board-Icon der View hinzu
+	public Board(BorderPane root, String parseString)
 	{
 		board = new Image("Board.png"); //Spielbrett
 		icon = new ImageView(board);
-
 		this.possibleMove=new ArrayList<Integer>();
 		this.possibleTarget=new ArrayList<Integer>();
 
-		root.getChildren().add(getIcon()); //Aenderung, da sonst Brett ueber Pieces
-		PieceFactory piecefactory = new PieceFactory();
+		root.getChildren().add(icon); //Aenderung, da sonst Brett ueber Pieces
+		
+		
 
-		for(int j=0;j<2;j++)
-		{//Ausgangspositionen der Pieces 
-			for (int i=0;i<9;i++)
+
+//		Aufbau der Views
+		GameParser.parseBoard(parseString, felder);
+		for(int i=0;i<9;i++)
+		{
+			for(int j=0;j<9;j++)
 			{
-				//Aufbau untere Seite
-
-				if(j==1)  //Reihe: Bauern
+				if(felder[i][j]!=null)
 				{
-					pieces[i] = piecefactory.getPiece(Alliance.GOOD, 0);
-					root.getChildren().add(pieces[i].getIcon()); //Image von neuem Piece der Scene hinzufuegen	
-					pieces[i].getIcon().setX((i)*50+5);		//Image von Piece ausrichten
-					pieces[i].getIcon().setY((8-j)*50+5);
-					felder[i][8-j] = pieces[i]; //Piece dem Array "felder" hinzufuegen
-				}
-				else   //Reihe: Andere Figuren
-				{
-					pieces[i+9] = piecefactory.getPiece(Alliance.GOOD, i+1);
-					root.getChildren().add(pieces[i+9].getIcon()); //Image von neuem Piece der Scene hinzufuegen
-					pieces[i+9].getIcon().setX((i)*50+5);		//Image von Piece ausrichten
-					pieces[i+9].getIcon().setY((8-j)*50+5);
-					felder[i][8-j] = pieces[i+9]; //Piece dem Array "felder" hinzufuegen
-				}
-
-				//Aufbau obere Seite
-
-				if(j==1)  //Reihe: Bauern
-				{
-					pieces[i+18] = piecefactory.getPiece(Alliance.EVIL, 0);
-					root.getChildren().add(pieces[i+18].getIcon()); //Image von neuem Piece der Scene hinzufuegen
-					//pieces[i+18].getIcon().setRotate(180);	//Bild rotieren
-					pieces[i+18].getIcon().setX((i)*50+5);	//Image von Piece ausrichten
-					pieces[i+18].getIcon().setY((j)*50+5);
-					felder[i][j] = pieces[i+18]; //Piece dem Array "felder" hinzufuegen
-				}
-				else   //Reihe: Andere Figuren
-				{
-					pieces[i+27] = piecefactory.getPiece(Alliance.EVIL, i+1);
-					root.getChildren().add(pieces[i+27].getIcon()); //Image von neuem Piece der Scene hinzufuegen
-					//pieces[i+27].getIcon().setRotate(180);	//Bild rotieren
-					pieces[i+27].getIcon().setX((i)*50+5);	//Image von Piece ausrichten
-					pieces[i+27].getIcon().setY((j)*50+5);
-					felder[i][j] = pieces[i+27]; //Piece dem Array "felder" hinzufuegen
+					//PieceViews
+					Piece currPiece=felder[i][j];
+					root.getChildren().add(currPiece.getIcon());
+					
+					//AvatarViews
+					root.getChildren().add(currPiece.getAvatarView());
+					
+					//SavageryViews
+					root.getChildren().add(currPiece.getSavageryView());
+					
+					//PoisonViews
+					root.getChildren().add(currPiece.getPoisonView());
+					
+					//TauntingViews
+					root.getChildren().add(currPiece.getTauntingView());
+					
+					//FrozenViews
+					root.getChildren().add(currPiece.getFreezeView());
+					
+					//HealthViews
+					root.getChildren().add(currPiece.getHealthView());
+					
+					pane.getChildren().add(currPiece.getHealthLabel());
+					update(i, j, currPiece);
 				}
 			}
 		}
+		root.getChildren().add(pane);
 	}
 
+	public void update(int i, int j, Piece currPiece) {
+
+		if (isPiece(i, j)) {
+			currPiece.getIcon().setX(i * 50 + 5);
+			currPiece.getIcon().setY(j * 50 + 5);
+			currPiece.getAvatarView().setX(i * 50);
+			currPiece.getAvatarView().setY(j * 50);
+			currPiece.getSavageryView().setX(i * 50);
+			currPiece.getSavageryView().setY(j * 50);
+			currPiece.getPoisonView().setX(i * 50 - 5);
+			currPiece.getPoisonView().setY(j * 50 + 20);
+			currPiece.getTauntingView().setX(i * 50);
+			currPiece.getTauntingView().setY(j * 50);
+			currPiece.getFreezeView().setX(i * 50);
+			currPiece.getFreezeView().setY(j * 50);
+			currPiece.setHealthLabel(currPiece.getHealth());
+			currPiece.getHealthView().setX(i * 50 + 25);
+			currPiece.getHealthView().setY(j * 50 + 25);
+
+			if (currPiece.getHealth() < 10) {
+				currPiece.getHealthLabel().setTranslateX(i * 50 + 34);
+				currPiece.getHealthLabel().setTranslateY(j * 50 + 30);
+			} else {
+				currPiece.getHealthLabel().setTranslateX(i * 50 + 34);
+				currPiece.getHealthLabel().setTranslateY(j * 50 + 27);
+			}
+		}
+	}
+	
+	//Überprüft ob an der Stelle x,y im Array felder ein Piece steht
 	public boolean isPiece(int x, int y)
 	{
 		return !(felder[x][y] == null);
 	}
 
+	//Überprüft ob an der Stelle x,y im Array felder ein Piece der Fraktion des Spielers steht
+	public boolean isMyPiece(int x, int y)
+	{
+		if(isPiece(x,y) && felder[x][y].getCharacterAlliance()==myAlliance)return true;
+		else return false;
+	}
+	
+	//Überprüft ob an der Stelle x,y im Array felder ein Piece der Gegner-Fraktion des Spielers steht
+	public boolean isEnemyPiece(int x, int y)
+	{
+		if(isPiece(x,y) && !(felder[x][y].getCharacterAlliance()==myAlliance))return true;
+		else return false;
+	}
+
+
 	//Methode zum Verschieben eines Pieces im Array "felder"
 	public void setPiece(int x, int y, int kx, int ky)
 	{
+		//PieceViews
 		felder[x][y].getIcon().setX(kx*50+5);
 		felder[x][y].getIcon().setY(ky*50+5);
+		
+		//weitere Views wie Poisened
+		//...
+		
+		//Arryanpassung
 		felder[kx][ky]=felder[x][y];
 		felder[x][y]=null;
+		
 	}
 
 	//Getter
 	public Piece getPiece(int x, int y){return felder[x][y];}
+	public Piece[][] getFelder(){return felder;}
+	public Alliance getMyAlliance(){return myAlliance;}
+	public Image getBoard(){return board;}
 	public ImageView getIcon(){return icon;}
 	public Image getImage(int x, int y){return felder[x][y].getImage();}
 	public ArrayList<Integer> getPossibleMove(){return possibleMove;}
 	public ArrayList<Integer> getPossibleTarget(){return possibleTarget;}
 
+	//Berechnet alle Ziele die dem Piece an der Stelle x,y im Array Felder zur Verfügung stehen
 	public void calculateTargets(int x, int y)
 	{
 
@@ -110,38 +161,40 @@ public class Board
 		case PEASANT: 
 			if(currP.getCharacterAlliance()==Alliance.GOOD)
 			{
-				if(inBoundary(x-1, y-1) && isPiece(x-1, y-1)) possibleTarget.add((x-1)*10+y-1);
-				if(inBoundary(x+1, y-1) && isPiece(x+1, y-1)) possibleTarget.add((x+1)*10+y-1);
+				if(inBoundary(x-1, y-1) && isEnemyPiece(x-1, y-1)) possibleTarget.add((x-1)*10+y-1);
+				if(inBoundary(x+1, y-1) && isEnemyPiece(x+1, y-1)) possibleTarget.add((x+1)*10+y-1);
 			}
 			else
 			{
-				if(inBoundary(x-1, y+1) && isPiece(x-1, y+1)) possibleTarget.add((x-1)*10+y+1);
-				if(inBoundary(x+1, y+1) && isPiece(x+1, y+1)) possibleTarget.add((x+1)*10+y+1);
+				if(inBoundary(x-1, y+1) && isEnemyPiece(x-1, y+1)) possibleTarget.add((x-1)*10+y+1);
+				if(inBoundary(x+1, y+1) && isEnemyPiece(x+1, y+1)) possibleTarget.add((x+1)*10+y+1);
 			}
 			break;
 		case ARCHER:
 			for(int i=-3;i<4;i++)
 			{
-					if(i==0) continue;
-					if(inBoundary(x+i, y) && isPiece(x+i, y)) possibleTarget.add((x+i)*10+y);
+				if(i==0) continue;
+				if(inBoundary(x+i, y) && isEnemyPiece(x+i, y)) possibleTarget.add((x+i)*10+y);
 			}
 			for(int i=-3;i<4;i++)
 			{
-					if(i==0) continue;
-					if(inBoundary(x, y+i) && isPiece(x, y+i)) possibleTarget.add((x)*10+y+i);
+				if(i==0) continue;
+				if(inBoundary(x, y+i) && isEnemyPiece(x, y+i)) possibleTarget.add((x)*10+y+i);
 			}
+			break;
 		default:
 			for(int i=-1;i<2;i++)
 			{
 				for(int j=-1;j<2;j++)
 				{
 					if(i==0 && j==0) continue;
-					if(inBoundary(x+i, y+j) && isPiece(x+i, y+j)) possibleTarget.add((x+i)*10+y+j);
+					if(inBoundary(x+i, y+j) && isEnemyPiece(x+i, y+j)) possibleTarget.add((x+i)*10+y+j);
 				}
 			}
 		}
 	}
 
+	//Berechnet alle Bewegungsmöglichkeiten dem dem Piece an der Stelle x,y im Array Felder zur Verfügung stehen
 	public void calculateMovement(int x, int y)
 	{
 		this.possibleMove=new ArrayList<Integer>();
@@ -153,10 +206,11 @@ public class Board
 		case 4: getStraight(x, y, possibleMove, possibleTarget, pieceT);
 		case 3: getDiagonal(x, y, possibleMove, possibleTarget, pieceT); break;
 		case 2:	getStraight(x, y, possibleMove, possibleTarget, pieceT); break;
-		case 5: getKnight(x, y, possibleMove, possibleTarget, pieceT);
+		case 5: getKnight(x, y, possibleMove, possibleTarget);
 		}
 	}
 
+	//Unterfunktion zur Berechnung der Ziele/Bewegungsmöglichkeiten des Pieces in diagonaler Richtung
 	private void getDiagonal(int x, int y, ArrayList<Integer> possibleMove, ArrayList<Integer> possibleTarget, PieceType pieceT)
 	{
 		int range = pieceT.getRange();
@@ -224,6 +278,7 @@ public class Board
 		}
 	}
 
+	//Unterfunktion zur Berechnung der Ziele/Bewegungsmöglichkeiten des Pieces in gerader Richtung
 	private void getStraight(int x, int y, ArrayList<Integer> possibleMove, ArrayList<Integer> possibleTarget, PieceType pieceT)
 	{
 		int range = pieceT.getRange();
@@ -293,7 +348,8 @@ public class Board
 		}
 	}
 
-	private void getKnight(int x, int y, ArrayList<Integer> possibleMove, ArrayList<Integer> possibleTarget, PieceType pieceT)
+	//Unterfunktion zur Berechnung der Ziele/Bewegungsmöglichkeiten des Knight-Pieces in diagonaler Richtung
+	private void getKnight(int x, int y, ArrayList<Integer> possibleMove, ArrayList<Integer> possibleTarget)
 	{
 		if(inBoundary(x+2, y+1))
 		{
@@ -353,6 +409,7 @@ public class Board
 		}
 	}
 
+	//Unterfunktion zur Berechnung der Ziele/Bewegungsmöglichkeiten des Peasant-Pieces
 	private void getPeasant(int x, int y, ArrayList<Integer> possibleMove, ArrayList<Integer> possibleTarget, PieceType pieceT)
 	{
 		Alliance all=getPiece(x,y).getCharacterAlliance();
@@ -378,7 +435,7 @@ public class Board
 		}
 		else
 		{
- 			if(inBoundary(x, y+1) && !isPiece(x, y+1))
+			if(inBoundary(x, y+1) && !isPiece(x, y+1))
 			{
 				possibleMove.add((x*10)+(y+1));
 			}
@@ -395,13 +452,20 @@ public class Board
 				}
 			}
 		}
+		
 	}
+	
 
+	//Gibt zurück, ob ein Koordinatenpaar in den Grenzen des Schachfeldes(9x9) liegt
 	public static boolean inBoundary(int x, int y)
 	{
 		if(x<=8 && y<=8 && x>=0 && y>=0)return true;
 		else return false;
 	}
+	
+	
+	
+	
 }
 
 

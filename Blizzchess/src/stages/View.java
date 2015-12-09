@@ -1,5 +1,7 @@
 package stages;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -7,18 +9,32 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.stage.WindowEvent;
+import pieces.Alliance;
+import pieces.StatusEffect;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
+<<<<<<< HEAD
 import java.util.regex.Pattern;
 
 import connection.Client;
 import game.Board;
+=======
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
+import game.*;
+>>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
 
 import java.io.File;
 import javafx.scene.media.Media;
@@ -26,20 +42,10 @@ import javafx.scene.media.MediaPlayer;
 
 public class View extends Application 
 {
+	//StartUp
 	public static final CountDownLatch latch = new CountDownLatch(1);
 	public static View startUpTest = null;
-
-
-	int turnState=0;
-	int gameState;
-	int x,y,xNew,yNew;	//x/y: Koordinaten von Event/Piece; xNew/yNew: Neue Koordinaten von Piece (durch Event)
-	int xT,yT;			//MouseMovedEvent; change names of var
-
-	ArrayList<Integer> possibleMove;
-	ArrayList<Integer> possibleTarget;
-
-	public static View waitForStartUpTest() 
-	{
+	public static View waitForStartUpTest() {
 		try {
 			latch.await();
 		} catch (InterruptedException e) {
@@ -48,17 +54,16 @@ public class View extends Application
 		return startUpTest;
 	}
 
-	public static void setStartUpTest(View startUpTest0) 
-	{
+	public static void setStartUpTest(View startUpTest0) {
 		startUpTest = startUpTest0;
 		latch.countDown();
 	}
 
-	public View()
-	{
+	public View() {
 		setStartUpTest(this);
 	}
 	
+<<<<<<< HEAD
 //	Media sound;
 //	public Media getSound()
 //	{
@@ -68,10 +73,61 @@ public class View extends Application
 //	{
 //		sound=new Media(new File(track).toURI().toString());
 //	}
+=======
+	//Klassen der Stages
+	Menu menu = new Menu();
+	Info info = new Info();
+
+	
+	IntegerProperty turnState = new SimpleIntegerProperty();
+	
+		
+	
+	Alliance whoseTurn;
+	int x,y,xNew,yNew;	//x/y: Koordinaten von Event/Piece; xNew/yNew: Neue Koordinaten von Piece (durch Event)
+	int xT,yT;			//MouseMovedEvent; change names of var
+
+	ArrayList<Integer> possibleMove;
+	ArrayList<Integer> possibleTarget;
+	
+	
+	
+
+>>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
 	@Override
 	public void start(Stage primaryStage) {
-		//Zunaechst wird der Login behandelt
+		turnState.addListener(new ChangeListener() {
+		      @Override
+		      public void changed(ObservableValue observableValue, Object oldValue,
+		          Object newValue) {
+		        menu.setButtonImage(turnState.getValue());
+		      }
+		   });
+		turnState.setValue(0);
+
+
+		//wird Hauptstage verschoben, verschieben sich beide Leisten entsprechend mit
+		primaryStage.xProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				menu.setPosition(primaryStage);
+				info.setPosition(primaryStage);
+			}
+		});
+		
+		primaryStage.yProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				menu.setPosition(primaryStage);
+				info.setPosition(primaryStage);
+			}
+		});
+		
+		//Zunächst wird der Login behandelt
 		Login login = new Login();
+<<<<<<< HEAD
 		Client player = new Client();
 		GameSelect gameSelect = new GameSelect();
 		Menu menu = new Menu();
@@ -172,6 +228,10 @@ public class View extends Application
 		});
 		
 		//EventHandler: wenn Login-Button betaetigt wird
+=======
+		
+		//EventHandler: wenn Login-Button betätigt wird
+>>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
 		login.getBtn().setOnAction(new EventHandler<ActionEvent>()
 		{
 			
@@ -188,9 +248,17 @@ public class View extends Application
 				if(player.checkLogin())
 				{
 					login.closeStage();
+<<<<<<< HEAD
 					//login.clearStrings();
 					gameSelect.setOpenGames(gameSelect.createOpenGamesList(player.getOpenGames()));
 					gameSelect.showStage();
+=======
+					primaryStage.show();
+					menu.setPosition(primaryStage);
+					menu.showStage();
+					info.setPosition(primaryStage);
+					info.showStage();
+>>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
 				}
 				else
 				{
@@ -200,6 +268,7 @@ public class View extends Application
 				}
 			}
 		});
+<<<<<<< HEAD
 
 		menu.getBtn().setOnAction(new EventHandler<ActionEvent>()
 		{
@@ -212,6 +281,9 @@ public class View extends Application
 				}
 			}
 		});
+=======
+		login.showStage();
+>>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
 
 
 		//Definierung der primaryStage + Pane + Scene
@@ -220,13 +292,18 @@ public class View extends Application
 		BorderPane root = new BorderPane();
 		Scene scene = new Scene(root, 440, 440);
 		primaryStage.setScene(scene);
-		Board board = new Board(root);
+		Board board = new Board(root, GameParser.DEFAULT_STRING);
+		
 
+<<<<<<< HEAD
 		
 		
 		//koX/Y: Nullkoordinaten
 		//final int koX = (int)root.getLayoutX();
 		//final int koY = (int)root.getLayoutY();
+=======
+		Arrays.toString(board.getFelder());
+>>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
 
 		//Setzen des Canvas (Zeichner) für Felder auf die eine Figur bewegt werden kann
 		final Canvas canvasGreen = new Canvas (700,700);
@@ -241,17 +318,19 @@ public class View extends Application
 		GraphicsContext gcRed = canvasRed.getGraphicsContext2D();
 		gcRed.setStroke(Color.rgb(255, 0, 0, 0.9));
 		gcRed.setLineWidth(3);
-
-		//info stage in eigene Klasse!
-
-		//Definierung der infoStage + Scene + Pane
-		Stage infoStage = new Stage();
-		infoStage.initStyle(StageStyle.UNDECORATED);
-		BorderPane infoPane = new BorderPane();
-		Scene infoScene = new Scene(infoPane, 100, 250);
-		infoStage.setScene(infoScene);
-
-
+		
+		//Setzen des Canvas (Zeichner) für angeklickets Piece
+		final Canvas canvasOrchid = new Canvas (700,700);
+		canvasOrchid.setStyle("-fx-border-color: darkorchid;");
+		GraphicsContext gcOrchid = canvasOrchid.getGraphicsContext2D();
+		gcOrchid.setStroke(Color.DARKORCHID);
+		gcOrchid.setLineWidth(3);
+		
+		root.getChildren().add(canvasOrchid);
+		root.getChildren().add(canvasGreen);
+		root.getChildren().add(canvasRed);
+		
+		
 		//Event um die infoStage zu befuellen und anzuzeigen
 		scene.setOnMouseMoved(new EventHandler<MouseEvent>()
 		{
@@ -262,39 +341,12 @@ public class View extends Application
 
 				if(board.isPiece(xT,yT)) //befuellen, wenn piece
 				{
-					if (menu.getButtonGreen() == true){
-						// Bild des Piece holen, neu skalieren und infoStage
-						// setzen
-						infoStage.setX(xT * 50 + 508);
-						infoStage.setY(yT * 50 + 11);
-						ImageView aktPiece = new ImageView(board.getImage(xT, yT));
-						aktPiece.setScaleX(2.5);
-						aktPiece.setScaleY(2.5);
-						aktPiece.setX(29);
-						aktPiece.setY(29);
-						infoPane.getChildren().add(aktPiece);
-						infoStage.show();
-					}
-				}
-				else
-				{
-					infoStage.close(); //schließen, wenn nicht piece
+					info.removeAbilityLabels();
+					info.showInfo(board.getPiece(xT, yT));
 				}
 			}
-		}
-				);
-		//Event um infoStage zu schließen beim verlassen der scene
-		scene.setOnMouseExited(new EventHandler<MouseEvent>()
-		{
-			public void handle(MouseEvent event)
-			{
-				if(infoStage.isShowing())
-				{
-					infoStage.close();
-				}
-			}
-		}
-				);
+		});
+		
 
 		scene.setOnMousePressed(new EventHandler<MouseEvent>() 
 		{
@@ -302,12 +354,22 @@ public class View extends Application
 			//Aufbau/Kontrolle eines Spielzuges
 			public void handle(MouseEvent event) 
 			{
+				whoseTurn=Alliance.GOOD;
+				if(whoseTurn==board.getMyAlliance())
+				{
+					handleTurn(board, canvasGreen, gcGreen, canvasRed, gcRed, event);
+				}
+			}
+
+			private void handleTurn(Board board, final Canvas canvasGreen, GraphicsContext gcGreen,
+					final Canvas canvasRed, GraphicsContext gcRed, MouseEvent event) {
 				//Switch-Case in Game
-				switch(turnState)
+				switch(turnState.getValue())
 				{
 				case 0: //Spieler ist in einem neuen Spielzug
 					x = (int)(event.getX()-board.getIcon().getX())/50;
 					y = (int)(event.getY()-board.getIcon().getY())/50;
+					//if(board.isMyPiece(x,y))
 					if(board.isPiece(x,y))
 					{
 						board.calculateMovement(x, y);
@@ -315,8 +377,9 @@ public class View extends Application
 
 						possibleMove=board.getPossibleMove();
 						possibleTarget=board.getPossibleTarget();
-						turnState=1;
-
+						turnState.setValue(1);
+						
+						
 						for(Integer movementInt : possibleMove)
 						{
 							int greenX = movementInt/10;
@@ -329,8 +392,7 @@ public class View extends Application
 							int redY = targetInt%10;
 							gcRed.strokeRect(redX*50, redY*50, 50, 50);
 						}
-						root.getChildren().add(canvasGreen);
-						root.getChildren().add(canvasRed);
+						gcOrchid.strokeRect(x*50, y*50, 50, 50);
 					}
 					break;
 				case 1: //Spieler hat ein Piece angeklickt
@@ -338,7 +400,7 @@ public class View extends Application
 					xNew = (int)(event.getX()-board.getIcon().getX())/50; //neue x-Koordinate
 					yNew = (int)(event.getY()-board.getIcon().getY())/50; //neue y-Koordinate
 					int koordInt=(xNew*10+yNew);
-					turnState=0;
+					turnState.setValue(3);;
 
 					for(Integer movementInt : possibleMove)
 					{
@@ -347,69 +409,87 @@ public class View extends Application
 							board.setPiece(x, y, xNew, yNew);
 							x=xNew;
 							y=yNew;
-							turnState=2;
+							turnState.setValue(2);
+							board.calculateTargets(x, y);
+							possibleTarget=board.getPossibleTarget();
+							if(possibleTarget.isEmpty())
+							{
+								gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
+								turnState.setValue(0);
+								if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
+								else whoseTurn=Alliance.GOOD;
+								break;
+							}
+
+							gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
+
+							for(Integer targetInt : possibleTarget)
+							{
+								int redX = targetInt/10;
+								int redY = targetInt%10;
+								gcRed.strokeRect(redX*50, redY*50, 50, 50);
+							}
 						}
 					}
-					for(Integer targetInt : possibleMove)
+					for(Integer targetInt : possibleTarget)
 					{
 						if(koordInt==targetInt)
 						{
+							gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
+							
 							//attacke
-							turnState=2;
+							board.getPiece(xNew,yNew).attack();
+//							attack(board);
+							
+							turnState.setValue(0);
+							//gameState
+							if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
+							else whoseTurn=Alliance.GOOD;
 						}
+					}
+
+					if(turnState.getValue()==3)
+					{
+						gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
+						turnState.setValue(0);
 					}
 
 					//Sobald ein Piece sich bewegt hat, muessen die gezeichneten Quadrate entfernt werden
 					//Canvas wird anschliessend entfernt
 					gcGreen.clearRect(canvasGreen.getLayoutX(),canvasGreen.getLayoutY(), canvasGreen.getWidth(), canvasGreen.getHeight());
-					gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
-					root.getChildren().remove(canvasGreen);
-					root.getChildren().remove(canvasRed);
+					gcOrchid.clearRect(canvasOrchid.getLayoutX(),canvasOrchid.getLayoutY(), canvasOrchid.getWidth(), canvasOrchid.getHeight());
+
+					board.update(xNew,yNew,board.getPiece(xNew, yNew));
 					break;
 
-				case 2: //Piece wurde bewegt
-					
-					xNew = (int)(event.getX()-board.getIcon().getX())/50; //neue x-Koordinate
-					yNew = (int)(event.getY()-board.getIcon().getY())/50; //neue y-Koordinate
-
-					if(x==xNew && y==yNew)
-					{
-						board.calculateTargets(x, y);
-						turnState=3;
-						possibleTarget=board.getPossibleTarget();
-						for(Integer targetInt : possibleTarget)
-						{
-							int redX = targetInt/10;
-							int redY = targetInt%10;
-							gcRed.strokeRect(redX*50, redY*50, 50, 50);
-						}
-						root.getChildren().add(canvasRed);
-					}
-					//eve anzeige details rechte scene
-					break;	//???????????????????????
-				case 3:
+				case 2: //Piece hat sich bewegt
 					xNew = (int)(event.getX()-board.getIcon().getX())/50; //neue x-Koordinate
 					yNew = (int)(event.getY()-board.getIcon().getY())/50; //neue y-Koordinate
 					koordInt=(xNew*10+yNew);
-					turnState=2;
 					for(Integer targetInt : possibleTarget)
 					{
 						if(koordInt==targetInt)
 						{
 							//attacke
-							turnState=0;
+							board.getPiece(xNew,yNew).attack();
+							board.getPiece(xNew, yNew).setHealthLabel(board.getPiece(xNew, yNew).getHealth());
+							turnState.setValue(0);
+							if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
+							else whoseTurn=Alliance.GOOD;
+							gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
 						}
 					}
-
-					gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
-					root.getChildren().remove(canvasRed);
+					
+					menu.setButtonImage(2);
 					break;
 				}
 			}
+			
 		});
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent we) {
 				menu.closeStage();
+				info.closeStage();
 			}
 		});    
 	}
