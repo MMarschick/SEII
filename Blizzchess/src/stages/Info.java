@@ -61,8 +61,8 @@ public class Info {
 		pieceView.setScaleX(2.5);
 		pieceView.setScaleY(2.5);
 		
-		labels[0].setText("Current Health: " + piece.getHealth());
-		labels[1].setText("Max Health: " + piece.getPieceT().getMaxHealth());
+		labels[0].setText("Health: " + piece.getHealth() + "/" + piece.getPieceT().getMaxHealth());
+		labels[1].setText("Attack: " + piece.getPieceT().getAttackValue());
 		labels[2].setText("Ability Cooldown: " + piece.getAbilityCooldown());
 		for (int i=0;i<piece.getStatusEffects().size()-1;i++){
 			labels[i+3].setText(piece.getStatusEffects().get(i).getAbility().getStatusName()+"/"+

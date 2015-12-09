@@ -25,6 +25,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import game.*;
 
@@ -56,8 +60,11 @@ public class View extends Application
 	Info info = new Info();
 
 	
-	int turnState=0;
-	Alliance whoseTurn=Alliance.GOOD;
+	IntegerProperty turnState = new SimpleIntegerProperty();
+	
+		
+	
+	Alliance whoseTurn;
 	int x,y,xNew,yNew;	//x/y: Koordinaten von Event/Piece; xNew/yNew: Neue Koordinaten von Piece (durch Event)
 	int xT,yT;			//MouseMovedEvent; change names of var
 
@@ -69,6 +76,15 @@ public class View extends Application
 
 	@Override
 	public void start(Stage primaryStage) {
+		turnState.addListener(new ChangeListener() {
+		      @Override
+		      public void changed(ObservableValue observableValue, Object oldValue,
+		          Object newValue) {
+		        menu.setButtonImage(turnState.getValue());
+		      }
+		   });
+		turnState.setValue(0);
+
 
 		//wird Hauptstage verschoben, verschieben sich beide Leisten entsprechend mit
 		primaryStage.xProperty().addListener(new ChangeListener<Number>() {
@@ -118,19 +134,6 @@ public class View extends Application
 		});
 		login.showStage();
 
-		//wird später für Zug beenden benutzt
-		menu.getBtn().setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				menu.changeButton();
-				if(turnState>1)
-				{
-					turnState=0;
-				}
-			}
-		});
-
 
 		//Definierung der primaryStage + Pane + Scene
 		primaryStage.setTitle("Blizzchess - Savants of Warcraft");
@@ -157,20 +160,17 @@ public class View extends Application
 		gcRed.setStroke(Color.rgb(255, 0, 0, 0.9));
 		gcRed.setLineWidth(3);
 		
-		//Setzen des Canvas (Zeichner) für angreifbare Felder
+		//Setzen des Canvas (Zeichner) für angeklickets Piece
 		final Canvas canvasOrchid = new Canvas (700,700);
-		canvasRed.setStyle("-fx-border-color: darkorchid;");
-		GraphicsContext gcOrchid = canvasRed.getGraphicsContext2D();
-		gcRed.setStroke(Color.DARKORCHID);
-		gcRed.setLineWidth(3);
-
+		canvasOrchid.setStyle("-fx-border-color: darkorchid;");
+		GraphicsContext gcOrchid = canvasOrchid.getGraphicsContext2D();
+		gcOrchid.setStroke(Color.DARKORCHID);
+		gcOrchid.setLineWidth(3);
+		
+		root.getChildren().add(canvasOrchid);
 		root.getChildren().add(canvasGreen);
 		root.getChildren().add(canvasRed);
-		root.getChildren().add(canvasOrchid);
 		
-		
-		
-
 		
 		//Event um die infoStage zu befuellen und anzuzeigen
 		scene.setOnMouseMoved(new EventHandler<MouseEvent>()
@@ -205,7 +205,7 @@ public class View extends Application
 			private void handleTurn(Board board, final Canvas canvasGreen, GraphicsContext gcGreen,
 					final Canvas canvasRed, GraphicsContext gcRed, MouseEvent event) {
 				//Switch-Case in Game
-				switch(turnState)
+				switch(turnState.getValue())
 				{
 				case 0: //Spieler ist in einem neuen Spielzug
 					x = (int)(event.getX()-board.getIcon().getX())/50;
@@ -218,9 +218,8 @@ public class View extends Application
 
 						possibleMove=board.getPossibleMove();
 						possibleTarget=board.getPossibleTarget();
-						turnState=1;
+						turnState.setValue(1);
 						
-						gcOrchid.strokeRect(x*50, y*50, 50, 50);
 						
 						for(Integer movementInt : possibleMove)
 						{
@@ -234,8 +233,7 @@ public class View extends Application
 							int redY = targetInt%10;
 							gcRed.strokeRect(redX*50, redY*50, 50, 50);
 						}
-						//root.getChildren().add(canvasGreen);
-						//root.getChildren().add(canvasRed);
+						gcOrchid.strokeRect(x*50, y*50, 50, 50);
 					}
 					break;
 				case 1: //Spieler hat ein Piece angeklickt
@@ -243,7 +241,7 @@ public class View extends Application
 					xNew = (int)(event.getX()-board.getIcon().getX())/50; //neue x-Koordinate
 					yNew = (int)(event.getY()-board.getIcon().getY())/50; //neue y-Koordinate
 					int koordInt=(xNew*10+yNew);
-					turnState=3;
+					turnState.setValue(3);;
 
 					for(Integer movementInt : possibleMove)
 					{
@@ -252,20 +250,19 @@ public class View extends Application
 							board.setPiece(x, y, xNew, yNew);
 							x=xNew;
 							y=yNew;
-							turnState=2;
+							turnState.setValue(2);
 							board.calculateTargets(x, y);
 							possibleTarget=board.getPossibleTarget();
 							if(possibleTarget.isEmpty())
 							{
 								gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
-								turnState=0;
+								turnState.setValue(0);
 								if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
 								else whoseTurn=Alliance.GOOD;
 								break;
 							}
 
 							gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
-							gcOrchid.clearRect(canvasOrchid.getLayoutX(),canvasOrchid.getLayoutY(), canvasOrchid.getWidth(), canvasOrchid.getHeight());
 
 							for(Integer targetInt : possibleTarget)
 							{
@@ -282,25 +279,27 @@ public class View extends Application
 							gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
 							
 							//attacke
-							attack(board);
+							board.getPiece(xNew,yNew).attack();
+//							attack(board);
 							
-							turnState=0;
+							turnState.setValue(0);
 							//gameState
 							if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
 							else whoseTurn=Alliance.GOOD;
 						}
 					}
 
-					if(turnState==3)
+					if(turnState.getValue()==3)
 					{
 						gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
-						turnState=0;
+						turnState.setValue(0);
 					}
 
 					//Sobald ein Piece sich bewegt hat, muessen die gezeichneten Quadrate entfernt werden
 					//Canvas wird anschliessend entfernt
 					gcGreen.clearRect(canvasGreen.getLayoutX(),canvasGreen.getLayoutY(), canvasGreen.getWidth(), canvasGreen.getHeight());
-					
+					gcOrchid.clearRect(canvasOrchid.getLayoutX(),canvasOrchid.getLayoutY(), canvasOrchid.getWidth(), canvasOrchid.getHeight());
+
 					board.update(xNew,yNew,board.getPiece(xNew, yNew));
 					break;
 
@@ -313,23 +312,20 @@ public class View extends Application
 						if(koordInt==targetInt)
 						{
 							//attacke
-							attack(board);
+							board.getPiece(xNew,yNew).attack();
 							board.getPiece(xNew, yNew).setHealthLabel(board.getPiece(xNew, yNew).getHealth());
-							turnState=0;
+							turnState.setValue(0);
 							if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
 							else whoseTurn=Alliance.GOOD;
 							gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
 						}
 					}
 					
-
+					menu.setButtonImage(2);
 					break;
 				}
 			}
-
-			private void attack(Board board) {
-				board.getPiece(xNew, yNew).setHealth(board.getPiece(xNew, yNew).getHealth()-board.getPiece(x, y).getPieceT().getAttackValue());
-			}
+			
 		});
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent we) {

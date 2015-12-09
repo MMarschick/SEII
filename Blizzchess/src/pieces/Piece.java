@@ -2,6 +2,8 @@ package pieces;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import game.Board;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -93,6 +95,10 @@ public class Piece
 //			System.out.println(e.getStackTrace());
 		}
 	}
+	
+	public void attack() {
+		health=health-getPieceT().getAttackValue();
+	}
 
 	//Getter
 	public ImageView getIcon(){return icon;}
@@ -111,8 +117,6 @@ public class Piece
 	public ImageView getHealthView() {return healthView;}
 	public Label getHealthLabel() {return healthLabel;}
 	public void setHealth(int health) {this.health = health;}
-	//	public int attack(int thisX, int thisY, int targetX, int targetY);
-	//	public int receiveAttack(int damageReceived);
 
 	public void setHealthLabel(int h) {
 		healthLabel.setText(h>=10?""+h/10+"\n"+h%10:""+h);
