@@ -5,6 +5,8 @@
 package game;
 
 import java.util.ArrayList;
+
+import connection.Client;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -26,7 +28,7 @@ public class Board
 	//Konstruktor; erstellt aus einem parseString ein Bord; fügt das Board-Icon der View hinzu
 	public Board(BorderPane root, String parseString)
 	{
-		board = new Image("Board.png"); //Spielbrett
+		board = new Image("boards\\Board.png"); //Spielbrett
 		icon = new ImageView(board);
 		this.possibleMove=new ArrayList<Integer>();
 		this.possibleTarget=new ArrayList<Integer>();
@@ -461,6 +463,21 @@ public class Board
 	{
 		if(x<=8 && y<=8 && x>=0 && y>=0)return true;
 		else return false;
+	}
+
+	
+	public void flush(Client player) 
+	{
+		if(player.synchGame())
+		{
+			System.out.println("Turn gewechselt");
+		}
+		else
+		{
+			System.out.println("Turn nicht gewechselt");
+		}
+	//Alle Pieces aktualisieren:
+	//check death; Statuseffekte; remaining duration; trigger effekt; check death again
 	}
 	
 	

@@ -162,7 +162,7 @@ public class Login
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(25,25,25,25));
-		grid.setStyle("-fx-background-image: url('alliances.png');");
+		grid.setStyle("-fx-background-image: url('boards//alliances.png');");
 		sceneLogin = new Scene(grid, 400, 340);
 		scenetitle = new Text("Welcome to Blizzchess");
 		scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));

@@ -35,14 +35,9 @@ public class Menu {
 		menuScene = new Scene(border, 450, 60);
 		menuStage.setScene(menuScene);
 		
-<<<<<<< HEAD
-		btn = new Button("INFO");
-		btn.setStyle("-fx-background-color: GREEN;");
-		grid.getChildren().add(btn);
-=======
-		yellow = new Image("endTurn_yellow.png");
-		green = new Image("endTurn_green.png");
-		enemy = new Image("endTurn_enemy.png");
+		yellow = new Image("boards\\endTurn_yellow.png");
+		green = new Image("boards\\endTurn_green.png");
+		enemy = new Image("boards\\endTurn_enemy.png");
 		
 		endTurn = new ImageView();
 		endTurn.setOnMouseClicked(e -> 
@@ -63,24 +58,8 @@ public class Menu {
 				break;
 			case 3:
 				endTurn.setImage(enemy);
-				
-			
 		}
->>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
 	}
-
-	// gibt zurück ob Button gerade grün ist
-//	public boolean getButtonGreen() {
-//		return btn.getStyle().equals("-fx-background-color: GREEN;");
-//	}
-
-	// wechselt die Farbe des Buttons Rot/Grün
-//	public void changeButton() {
-//		if (btn.getStyle().equals("-fx-background-color: RED;")) {
-//			btn.setStyle("-fx-background-color: GREEN;");
-//		} else
-//			btn.setStyle("-fx-background-color: RED;");
-//	}
 
 	// Getter
 	public Button getBtn() {return btn;}
@@ -95,6 +74,5 @@ public class Menu {
 	public void closeStage() {menuStage.close();}
 	public void showStage() {menuStage.show();}
 	public boolean isVisible() {return menuStage.isShowing();}
-	
 	
 }

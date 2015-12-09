@@ -9,9 +9,14 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.regex.Pattern;
+
+import game.GameParser;
  
 public class Client
 {
+	//Edit Test
+	private int wait=0;
+	
 	//Variablen
     private static Socket socket; //zentraler Socket
     private char delimiter='|';	  //Definition eines Delimiters zur Trennung einer Nachricht
@@ -21,286 +26,14 @@ public class Client
     private BufferedReader br;    //BufferedReader zum Empfangen von Server
     
     private String opponentName;
+    private String playerOne;
+    private String playerTwo;
     
     //Setter-Methoden
-    public void setPlayerName(String playerName)
-    {
-    	this.playerName=playerName;
-    }
-    public void setPlayerPW(String playerPW)
-    {
-    	this.playerPW=playerPW;
-    }
-    public void setBufferedWriter(BufferedWriter bw)
-    {
-    	this.bw=bw;
-    }
-    public void setBufferedReader(BufferedReader br)
-    {
-    	this.br=br;
-    }
-    
-    //Methode als zentrale Kommunikationsstelle (Output zum Server)
-    private void sendMessage(String mode, String sendMessage)
-    {
-    	try
-    	{
-    		System.out.println(mode + "|" + sendMessage);
-    		bw.write(mode+delimiter+sendMessage+"\n");
-    		bw.flush();
-    	}
-    	catch(Exception e)
-    	{
-    		e.printStackTrace();
-    	}
-    }
-    
-    //Methode zum Verschicken einer bisher neutralen Nachricht
-    //Kann evtl. entfernt werden
-    public String recieveMessage()
-    {
-    	String message="";
-    	sendMessage("message", "Test");
-    	try
-    	{
-    		message=br.readLine();
-    	}
-    	catch(Exception e)
-    	{
-    		e.printStackTrace();
-    	}
-    	return message;
-    }
-    
-    //Methode zum Einloggen eines Players
-    //Boolean Rueckgabewert zur Ueberpruefung, ob der Login erfolgreich wahr
-    public boolean checkLogin()
-    {
-    	boolean loginTry=false;
-    	try
-    	{
-    		sendMessage("login", playerName+delimiter+playerPW);
-    		if(br.readLine().equals("true"))
-    		{
-    			loginTry=true;
-    		}
-    		else
-    		{
-    			
-    		}
-    	}
-    	catch(Exception e)
-    	{
-    		e.printStackTrace();
-    	}
-		return loginTry;
-    }
-    
-    //Methode zum Ausloggen eines Players
-    //Boolean Rueckgabewert zur Ueberpruefung, ob der Login erfolgreich wahr
-    public boolean checkLogout()
-    {
-    	boolean logoutTry=false;
-    	try
-    	{
-    		sendMessage("logout", playerName);
-    		if(br.readLine().equals("true"))
-    		{
-    			logoutTry=true;
-    		}
-    		else
-    		{
-    			
-    		}
-    	}
-    	catch(Exception e)
-    	{
-    		e.printStackTrace();
-    	}
-		return logoutTry;
-    }
-    
-    //Methode zum erhalten von offenen Spielen des Spielers
-    //Rueckgabewert sind alle Spiele in einem String; Delemiter: "|"
-    public String getOpenGames()
-    {
-    	String openGames="";
-    	try
-    	{
-    		sendMessage("openGames", playerName);
-    		openGames=br.readLine();
-    	}
-    	catch(Exception e)
-    	{
-    		e.printStackTrace();
-    	}
-    	return openGames;
-    }
-    
-    //Methode zum Synchronisieren des Boards
-    //Boolean Rueckgabewert zur Ueberpruefung, ob das Board synchronisiert werden konnte
-    public boolean synchBoard(String board)
-    {
-    	try
-    	{
-    		sendMessage("synchBoard", board);
-    		boolean gotBoard=false;
-    		while(!gotBoard)
-    		{
-    			gotBoard=Boolean.valueOf(br.readLine());
-    			if(!gotBoard)
-    			{
-    				gotBoard=synchBoard(board);
-    			}
-    		}
-    		return gotBoard;
-    	}
-    	catch(Exception e)
-    	{
-    		e.printStackTrace();
-    	}
-    	return false;
-    }
-    public boolean createPlayer()
-    {
-    	boolean createTry=false;
-    	try
-    	{
-    		sendMessage("createPlayer", playerName+"|"+playerPW);
-    		if(br.readLine().equals("true"))
-    		{
-    			createTry=true;
-    		}
-    		else
-    		{
-    			
-    		}
-    	}
-    	catch(Exception e)
-    	{
-    		e.printStackTrace();
-    	}
-    	return createTry;
-    }
-    
-//    public boolean turn()
-//    {
-//    	try
-//    	{
-//    		if(br.readLine().equals("true"))
-//    		{
-//    			return true;
-//    		}
-//    	}
-//    	catch(Exception e)
-//    	{
-//    		System.out.println(e.getMessage());
-//    	}
-//    	return false;
-//    }
-    
-    public String searchGame()
-    {
-    	//turn
-    	sendMessage("searchGame", playerName);
-    	try
-    	{
-    		String[] returnMessage = br.readLine().split(Pattern.quote("|"));
-    		if(returnMessage[0].equals("true"))
-    		{
-    			if(returnMessage[1].equals(playerName))
-    			{
-    				opponentName=returnMessage[2];
-    			}
-    			else
-    			{
-    				opponentName=returnMessage[1];
-    			}
-    			if(returnMessage[3].equals(playerName))
-    				return returnMessage[4];
-    			else
-    			{
-    				return "wait";
-    			}
-    		}
-    	}
-    	catch(Exception e)
-    	{
-    		System.out.println(e.getMessage());
-    	}
-    	return "false";
-    }
-    
-    //in newGame:
-    //neue methode nach searchNewGame verlagern
-    //am ende eine while (true) setzen
-    //bei 2 if abfragen überprüfen, ob es erfolgreich ist
-    //(update wurde ausgeführt; spiel ist bereits vorhanden)
-    //dann return true;;; vllt doch gameString? + PlayerOne + PlayerTwo? + Turn?
-    public String waitForGame()
-    {
-    	sendMessage("waitForGame", playerName+"|"+opponentName);
-    	try
-    	{
-    		if(br.readLine().equals("true"))
-    		{
-    			return "true";
-    		}
-    	}
-    	catch(Exception e)
-    	{
-    		System.out.println(e.getMessage());
-    	}
-    	return "false";
-    }
-    
-//    case "searchGame":
-//    	returnMessage=searchingGame(abc[1]);
-//    	break;
-//    	
-//    public String searchingGame(String playerName)
-//    {
-//    	return dataAccessor.search(playerName);
-//    }
-//    
-//    public String search(String playerName)
-//    {
-//    	rs...
-//    	if(online && searching)
-//    	{
-//    		boolean p1Free true;
-//    		if(playerOne.equals(""))
-//    		{
-//    			setPlayerOne(playerName);
-//    			p1Free=false;
-//    		}
-//    		if(playerTwo.equals("")&&!p1Free)
-//    		{
-//    			setPlayerTwo(playerName);
-//    		}
-//    		if(!PlayerOne.equals("")&&!PlayerTwo.equals(""))
-//    		{
-//    			if(Mathrandom >= 0.5)
-//    			{
-//    				setTurn(PlayerOne);
-//    			}
-//    			else
-//    			{
-//    				setTurn(PlayerTwo);
-//    			}
-//    			createGame(where PlayerOne PlayerTwo turn)
-//    			return "new";
-//    		}
-//    		else
-//    		{
-//    			return "wait";
-//    		}
-//    	}
-//    	else
-//    	{
-//    		return "";
-//    	}
-//    }
+    public void setPlayerName(String playerName){this.playerName=playerName;}
+    public void setPlayerPW(String playerPW){this.playerPW=playerPW;}
+    public void setBufferedWriter(BufferedWriter bw){this.bw=bw;}
+    public void setBufferedReader(BufferedReader br){this.br=br;}
     
     public Client()
     {
@@ -324,22 +57,211 @@ public class Client
     		InputStreamReader isr = new InputStreamReader(is);
     		setBufferedReader(new BufferedReader(isr));		
     	}
-    	catch(Exception e)
-    	{
-    		e.printStackTrace();
-    	}
+    	catch(Exception e){e.printStackTrace();}
     }
+    
+    //Methode als zentrale Kommunikationsstelle (Output zum Server)
+    private void sendMessage(String mode, String sendMessage)
+    {
+    	try
+    	{
+    		System.out.println(mode + "|" + sendMessage);
+    		bw.write(mode+delimiter+sendMessage+"\n");
+    		bw.flush();
+    	}
+    	catch(Exception e){e.printStackTrace();}
+    }
+        
+    //Methode zum Einloggen eines Players
+    //Boolean Rueckgabewert zur Ueberpruefung, ob der Login erfolgreich wahr
+    public boolean checkLogin()
+    {
+    	boolean loginTry=false;
+		sendMessage("login", playerName+delimiter+playerPW);
+    	try
+    	{
+    		if(br.readLine().equals("true")){loginTry=true;}
+    	}
+    	catch(Exception e){e.printStackTrace();}
+		return loginTry;
+    }
+    
+    //Methode zum Ausloggen eines Players
+    //Boolean Rueckgabewert zur Ueberpruefung, ob der Login erfolgreich wahr
+    public boolean checkLogout()
+    {
+    	boolean logoutTry=false;
+    	sendMessage("logout", playerName);
+    	try
+    	{
+    		if(br.readLine().equals("true")){logoutTry=true;}
+    	}
+    	catch(Exception e){e.printStackTrace();}
+		return logoutTry;
+    }
+    
+    //Methode zum erhalten von offenen Spielen des Spielers
+    //Rueckgabewert sind alle Spiele in einem String; Delemiter: "|"
+    public String getOpenGames()
+    {
+    	String openGames="";
+		sendMessage("openGames", playerName);
+    	try{openGames=br.readLine();}
+    	catch(Exception e){e.printStackTrace();}
+    	return openGames;
+    }
+    
+    //Methode zum Synchronisieren des Boards
+    //Boolean Rueckgabewert zur Ueberpruefung, ob das Board synchronisiert werden konnte
+    public boolean synchBoard(String board)
+    {
+		boolean gotBoard=false;
+		sendMessage("synchBoard", playerOne+"|"+playerTwo+"|"+board);
+    	try
+    	{
+    		while(!gotBoard)
+    		{
+    			gotBoard=Boolean.valueOf(br.readLine());
+    			if(!gotBoard){gotBoard=synchBoard(board);}
+    		}
+    		return gotBoard;
+    	}
+    	catch(Exception e){e.printStackTrace();}
+    	return gotBoard;
+    }
+    
+    //erstelle neuen Spieler
+    public boolean createPlayer()
+    {
+    	boolean createTry=false;
+    	try
+    	{
+    		sendMessage("createPlayer", playerName+"|"+playerPW);
+    		if(br.readLine().equals("true")){createTry=true;}
+    	}
+    	catch(Exception e){e.printStackTrace();}
+    	return createTry;
+    }
+    
+    //suche neues Spiel
+    public String searchGame()
+    {
+    	sendMessage("searchGame", playerName);
+    	try
+    	{
+    		String[] returnMessage = br.readLine().split(Pattern.quote("|"));
+    		if(returnMessage[0].equals("true"))
+    		{
+    			if(returnMessage[1].equals(playerName))
+    			{
+    				opponentName=returnMessage[2];
+    				playerOne=playerName;
+    				playerTwo=opponentName;
+    			}
+    			else
+    			{
+    				opponentName=returnMessage[1];
+    				playerOne=opponentName;
+    				playerTwo=playerName;
+    			}
+    			if(returnMessage[3].equals(playerName)){return returnMessage[4];}
+    			else{return opponentName;}
+    		}
+    	}
+    	catch(Exception e){System.out.println(e.getMessage());}
+    	return "false";
+    }
+    
+    //warte auf einen suchenden Spieler
+    public String waitForGame()
+    {
+    	sendMessage("waitForGame", playerName+"|"+opponentName);
+    	try
+    	{
+    		if(br.readLine().equals("true")){return "true";}
+    	}
+    	catch(Exception e){System.out.println(e.getMessage());}
+    	return "false";
+    }
+    
+    //warten auf turn
+    public boolean waitForTurn()
+    {
+    	sendMessage("waitForTurn", playerOne+"|"+playerTwo+"|"+playerName);
+    	try
+    	{
+    		if(br.readLine().equals("true")){return true;}
+    	}
+    	catch (Exception e){System.out.println(e.getMessage());}
+    	return false;
+    }
+    
+    public boolean synchGame()
+    {
+    	sendMessage("synchGame", playerOne+"|"+playerTwo+"|"+opponentName);
+    	try
+    	{
+    		if(br.readLine().equals("true")){return true;}
+    	}
+    	catch(Exception e){System.out.println(e.getMessage());}
+    	return false;
+    }
+    
+    //Erhalte ein Spiel mit playerOne/playerTwo
+	public String getGame() 
+	{
+		playerOne=playerName;
+		playerTwo="XXGamerXX";
+		opponentName="XXGamerXX";
+		sendMessage("game", playerOne+"|"+playerTwo);
+		try{return br.readLine();}
+		catch (Exception e){System.out.println(e.getMessage());}
+		return null;
+	}
     
     //Schliessen des Sockets/der Verbindung
     public void closeSocket()
     {
+    	try{socket.close();}
+    	catch(Exception e){e.printStackTrace();}
+    }
+    
+    //Edit fuer Tests
+    public Client (String test){}
+    public String returnTest()
+    {
+    	String[] testArray = new String[4];
+    	testArray[0]="true|wait";
+    	testArray[1]="true|false";
+    	testArray[2]="true|"+GameParser.DEFAULT_STRING;
+    	testArray[3]="true|anders";
+    	return(testArray[(int)(Math.random()*4)]);
+//    	return "true|false";   	
+    }
+    
+    public int waitTest()
+    {
+    	if(wait>1)
+    	{
+    		wait=0;
+    	}
+    	return wait++;
+    }
+    
+    //Methode zum Verschicken einer bisher neutralen Nachricht
+    //Kann evtl. entfernt werden
+    public String recieveMessage()
+    {
+    	String message="";
+    	sendMessage("message", "Test");
     	try
     	{
-    		socket.close();
+    		message=br.readLine();
     	}
     	catch(Exception e)
     	{
     		e.printStackTrace();
     	}
+    	return message;
     }
 }

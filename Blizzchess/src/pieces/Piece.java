@@ -26,17 +26,17 @@ public class Piece
 	
 	ImageView icon;
 	Image piece;
-	Image freeze=new Image("frozen.png");
+	Image freeze=new Image("state\\frozen.png");
 	ImageView freezeView= new ImageView(freeze);
-	Image poison=new Image("poison.png");
+	Image poison=new Image("state\\poison.png");
 	ImageView poisonView= new ImageView(poison);
-	Image avatar=new Image("avatar.png");
+	Image avatar=new Image("state\\avatar.png");
 	ImageView avatarView= new ImageView(avatar);
-	Image taunting=new Image("taunting.png");
+	Image taunting=new Image("state\\taunting.png");
 	ImageView tauntingView= new ImageView(taunting);
-	Image savagery=new Image("savagery.png");
+	Image savagery=new Image("state\\savagery.png");
 	ImageView savageryView= new ImageView(savagery);
-	Image healthImg=new Image("health.png");
+	Image healthImg=new Image("state\\health.png");
 	ImageView healthView= new ImageView(healthImg);
 	
 	Label healthLabel;

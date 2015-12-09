@@ -1,16 +1,11 @@
-<<<<<<< HEAD
-/stages/
+/boards/
 /connection/
-=======
+/evilAlliance/
+/evilPiece/
 /game/
+/goodAlliance/
+/goodPiece/
 /pieces/
-/poison.png
-/savagery.png
-/shaman.png
 /stages/
-/taunting.png
-/wolfrider.png
-/endTurn_yellow.png
-/endTurn_green.png
-/endTurn_enemy.png
->>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
+/state/
+/tracks/

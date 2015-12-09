@@ -7,137 +7,96 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.ImageView;
 import javafx.stage.WindowEvent;
 import pieces.Alliance;
-import pieces.StatusEffect;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
-<<<<<<< HEAD
 import java.util.regex.Pattern;
 
 import connection.Client;
+import connection.Test;
 import game.Board;
-=======
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-
 import game.*;
->>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
-
-import java.io.File;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 
 public class View extends Application 
 {
 	//StartUp
 	public static final CountDownLatch latch = new CountDownLatch(1);
 	public static View startUpTest = null;
-	public static View waitForStartUpTest() {
-		try {
-			latch.await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	public static View waitForStartUpTest() 
+	{
+		try {latch.await();} 
+		catch (InterruptedException e) {e.printStackTrace();}
 		return startUpTest;
 	}
-
-	public static void setStartUpTest(View startUpTest0) {
+	public static void setStartUpTest(View startUpTest0) 
+	{
 		startUpTest = startUpTest0;
 		latch.countDown();
 	}
-
-	public View() {
-		setStartUpTest(this);
-	}
+	public View() {setStartUpTest(this);}
 	
-<<<<<<< HEAD
-//	Media sound;
-//	public Media getSound()
-//	{
-//		return sound;
-//	}
-//	public void setSound(String track)
-//	{
-//		sound=new Media(new File(track).toURI().toString());
-//	}
-=======
 	//Klassen der Stages
+	Login login = new Login();
+	Client player;
+	GameSelect gameSelect = new GameSelect();
 	Menu menu = new Menu();
 	Info info = new Info();
+	Board board;
+	
 
-	
+	//Variablen der Stages
 	IntegerProperty turnState = new SimpleIntegerProperty();
-	
-		
-	
 	Alliance whoseTurn;
 	int x,y,xNew,yNew;	//x/y: Koordinaten von Event/Piece; xNew/yNew: Neue Koordinaten von Piece (durch Event)
 	int xT,yT;			//MouseMovedEvent; change names of var
-
 	ArrayList<Integer> possibleMove;
 	ArrayList<Integer> possibleTarget;
 	
-	
-	
+	public void start(Stage primaryStage) 
+	{
+		//Definierung der primaryStage + Pane + Scene
+		primaryStage.setTitle("Blizzchess - Savants of Warcraft");
+		primaryStage.setResizable(false);
+		BorderPane root = new BorderPane();
+		Scene scene = new Scene(root, 440, 440);
+		primaryStage.setScene(scene);
+		
+		login.showStage();
 
->>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
-	@Override
-	public void start(Stage primaryStage) {
-		turnState.addListener(new ChangeListener() {
-		      @Override
+		turnState.addListener(new ChangeListener() 
+		{
 		      public void changed(ObservableValue observableValue, Object oldValue,
-		          Object newValue) {
-		        menu.setButtonImage(turnState.getValue());
-		      }
-		   });
+		          Object newValue) {menu.setButtonImage(turnState.getValue());}
+		});
 		turnState.setValue(0);
 
 
 		//wird Hauptstage verschoben, verschieben sich beide Leisten entsprechend mit
-		primaryStage.xProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+		primaryStage.xProperty().addListener(new ChangeListener<Number>() 
+		{
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) 
+			{
 				menu.setPosition(primaryStage);
 				info.setPosition(primaryStage);
 			}
 		});
 		
-		primaryStage.yProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+		primaryStage.yProperty().addListener(new ChangeListener<Number>() 
+		{
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) 
+			{
 				menu.setPosition(primaryStage);
 				info.setPosition(primaryStage);
 			}
 		});
-		
-		//Zunächst wird der Login behandelt
-		Login login = new Login();
-<<<<<<< HEAD
-		Client player = new Client();
-		GameSelect gameSelect = new GameSelect();
-		Menu menu = new Menu();
-		login.showStage();
-		
-//		setSound("sounds\\stages\\Mainscreen.mp3");
-//		MediaPlayer audio = new MediaPlayer(getSound());
-//	    audio.setVolume(0.05);
-//		audio.play();
-//		audio.setAutoPlay(true);
 
 		login.getCreateBtn().setOnAction(new EventHandler<ActionEvent>()
 		{
@@ -159,10 +118,7 @@ public class View extends Application
 							login.closeStage();
 							gameSelect.showStage();
 						}
-						else
-						{
-							System.out.println("Failed to login");
-						}
+						else{System.out.println("Failed to login");}
 					}
 					else
 					{
@@ -200,10 +156,7 @@ public class View extends Application
 						login.showStage();
 					}
 				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+				catch(Exception e){e.printStackTrace();}
 			}
 		});
 		
@@ -211,27 +164,24 @@ public class View extends Application
 		{
 			public void handle(ActionEvent ae)
 			{
-				String[] newGame = player.searchGame().split(Pattern.quote("|"));
-				switch(newGame[0])
-				{
-					case "wait":break;
-					case "false":break;
-					case "defaultString":System.out.println("Baue Board auf");break;
-				}
-				
-				
-//				gameSelect.closeStage();
-//				primaryStage.show();
-//				menu.showStage();
-				
+//				String[] newGame = player.searchGame().split(Pattern.quote("|"));
+//				switch(newGame[0])
+//				{
+//					case "wait":break;
+//					case "false":break;
+//					case "defaultString":System.out.println("Baue Board auf");break;
+//				}	
+				board = new Board(root, player.getGame());
+				gameSelect.closeStage();
+				primaryStage.show();
+				menu.setPosition(primaryStage);
+				menu.showStage();
+				info.setPosition(primaryStage);
+				info.showStage();
 			}
 		});
-		
-		//EventHandler: wenn Login-Button betaetigt wird
-=======
-		
+
 		//EventHandler: wenn Login-Button betätigt wird
->>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
 		login.getBtn().setOnAction(new EventHandler<ActionEvent>()
 		{
 			
@@ -240,25 +190,17 @@ public class View extends Application
 				login.getActiontarget().setFill(Color.YELLOW);
 				login.getActiontarget().setText("connecting...");
 				//New
+				player = new Client();
 				player.setPlayerName(login.getUserTextField().getText());
 				player.setPlayerPW(login.getPwBox().getText());
-				//Daten muessen an Server geschickt werden
-				//Danach wird dort ueberprueft, ob Name und Passwort uebereinstimmt
-				//Boolean wird zurueckgegeben und in der if-Anweisung geprueft
+
+				//ueberprueft, ob Name und Passwort uebereinstimmt
 				if(player.checkLogin())
 				{
 					login.closeStage();
-<<<<<<< HEAD
-					//login.clearStrings();
+					login.clearStrings();
 					gameSelect.setOpenGames(gameSelect.createOpenGamesList(player.getOpenGames()));
 					gameSelect.showStage();
-=======
-					primaryStage.show();
-					menu.setPosition(primaryStage);
-					menu.showStage();
-					info.setPosition(primaryStage);
-					info.showStage();
->>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
 				}
 				else
 				{
@@ -268,68 +210,22 @@ public class View extends Application
 				}
 			}
 		});
-<<<<<<< HEAD
-
-		menu.getBtn().setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent ae)
-			{
-				menu.changeButton();
-				if(turnState>1)
-				{
-					turnState=0;
-				}
-			}
-		});
-=======
-		login.showStage();
->>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
-
-
-		//Definierung der primaryStage + Pane + Scene
-		primaryStage.setTitle("Blizzchess - Savants of Warcraft");
-		primaryStage.setResizable(false);
-		BorderPane root = new BorderPane();
-		Scene scene = new Scene(root, 440, 440);
-		primaryStage.setScene(scene);
-		Board board = new Board(root, GameParser.DEFAULT_STRING);
+//		Board board = new Board(root, GameParser.DEFAULT_STRING);
 		
-
-<<<<<<< HEAD
-		
-		
-		//koX/Y: Nullkoordinaten
-		//final int koX = (int)root.getLayoutX();
-		//final int koY = (int)root.getLayoutY();
-=======
-		Arrays.toString(board.getFelder());
->>>>>>> 7eb61cee2ea59eea78963a810b0e8f7c6ad29541
+//		Arrays.toString(board.getFelder());
 
 		//Setzen des Canvas (Zeichner) für Felder auf die eine Figur bewegt werden kann
-		final Canvas canvasGreen = new Canvas (700,700);
-		canvasGreen.setStyle("-fx-border-color: green;");
-		GraphicsContext gcGreen = canvasGreen.getGraphicsContext2D();
-		gcGreen.setStroke(Color.rgb(0, 255, 0, 0.9));
-		gcGreen.setLineWidth(3);
-
+		final Test canvasGreen = new Test("GREEN");
+		
 		//Setzen des Canvas (Zeichner) für angreifbare Felder
-		final Canvas canvasRed = new Canvas (700,700);
-		canvasRed.setStyle("-fx-border-color: red;");
-		GraphicsContext gcRed = canvasRed.getGraphicsContext2D();
-		gcRed.setStroke(Color.rgb(255, 0, 0, 0.9));
-		gcRed.setLineWidth(3);
+		final Test canvasRed = new Test("RED");
 		
 		//Setzen des Canvas (Zeichner) für angeklickets Piece
-		final Canvas canvasOrchid = new Canvas (700,700);
-		canvasOrchid.setStyle("-fx-border-color: darkorchid;");
-		GraphicsContext gcOrchid = canvasOrchid.getGraphicsContext2D();
-		gcOrchid.setStroke(Color.DARKORCHID);
-		gcOrchid.setLineWidth(3);
+		final Test canvasOrchid = new Test("DARKORCHID");
 		
 		root.getChildren().add(canvasOrchid);
 		root.getChildren().add(canvasGreen);
 		root.getChildren().add(canvasRed);
-		
 		
 		//Event um die infoStage zu befuellen und anzuzeigen
 		scene.setOnMouseMoved(new EventHandler<MouseEvent>()
@@ -350,26 +246,22 @@ public class View extends Application
 
 		scene.setOnMousePressed(new EventHandler<MouseEvent>() 
 		{
-			@Override
 			//Aufbau/Kontrolle eines Spielzuges
 			public void handle(MouseEvent event) 
 			{
-				whoseTurn=Alliance.GOOD;
-				if(whoseTurn==board.getMyAlliance())
-				{
-					handleTurn(board, canvasGreen, gcGreen, canvasRed, gcRed, event);
-				}
+				if(player.waitForTurn()){whoseTurn=Alliance.GOOD;}
+
+				if(whoseTurn==board.getMyAlliance()){handleTurn(board, canvasGreen, canvasGreen.getGcCanvas(), canvasRed, canvasRed.getGcCanvas(), canvasOrchid, canvasOrchid.getGcCanvas(), event);}
 			}
 
 			private void handleTurn(Board board, final Canvas canvasGreen, GraphicsContext gcGreen,
-					final Canvas canvasRed, GraphicsContext gcRed, MouseEvent event) {
+					final Canvas canvasRed, GraphicsContext gcRed, final Canvas canvasOrchid, GraphicsContext gcOrchid, MouseEvent event) 
+			{
 				//Switch-Case in Game
-				switch(turnState.getValue())
-				{
+				switch(turnState.getValue()){
 				case 0: //Spieler ist in einem neuen Spielzug
 					x = (int)(event.getX()-board.getIcon().getX())/50;
 					y = (int)(event.getY()-board.getIcon().getY())/50;
-					//if(board.isMyPiece(x,y))
 					if(board.isPiece(x,y))
 					{
 						board.calculateMovement(x, y);
@@ -378,8 +270,7 @@ public class View extends Application
 						possibleMove=board.getPossibleMove();
 						possibleTarget=board.getPossibleTarget();
 						turnState.setValue(1);
-						
-						
+
 						for(Integer movementInt : possibleMove)
 						{
 							int greenX = movementInt/10;
@@ -420,9 +311,7 @@ public class View extends Application
 								else whoseTurn=Alliance.GOOD;
 								break;
 							}
-
 							gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
-
 							for(Integer targetInt : possibleTarget)
 							{
 								int redX = targetInt/10;
@@ -439,12 +328,12 @@ public class View extends Application
 							
 							//attacke
 							board.getPiece(xNew,yNew).attack();
-//							attack(board);
 							
 							turnState.setValue(0);
 							//gameState
 							if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
 							else whoseTurn=Alliance.GOOD;
+							board.flush(player);
 						}
 					}
 
@@ -477,17 +366,19 @@ public class View extends Application
 							if(whoseTurn==Alliance.GOOD)whoseTurn=Alliance.EVIL;
 							else whoseTurn=Alliance.GOOD;
 							gcRed.clearRect(canvasRed.getLayoutX(),canvasRed.getLayoutY(), canvasRed.getWidth(), canvasRed.getHeight());
+							board.flush(player);
 						}
 					}
-					
 					menu.setButtonImage(2);
 					break;
 				}
 			}
 			
 		});
-		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-			public void handle(WindowEvent we) {
+		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() 
+		{
+			public void handle(WindowEvent we) 
+			{
 				menu.closeStage();
 				info.closeStage();
 			}

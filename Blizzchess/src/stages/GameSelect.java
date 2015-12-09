@@ -91,7 +91,7 @@ public class GameSelect
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(25,25,25,25));
-		grid.setStyle("-fx-background-image: url('battleSelect.png');");
+		grid.setStyle("-fx-background-image: url('boards//battleSelect.png');");
 		selectScene = new Scene(grid, 400, 340);
 		selectStage.setScene(selectScene);
 		selectStage.setScene(selectScene);

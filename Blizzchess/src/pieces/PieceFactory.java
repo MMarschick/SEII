@@ -14,21 +14,21 @@ public class PieceFactory
 	//Konstruktor; füllt die Icon-Path-Arrays und das Piece-Type Arrays mit entsprechenden Daten
 	public PieceFactory()
 	{
-		pathsG[0] = "peasant.png";
-		pathsG[1] = "mountainking.png";
-		pathsG[2] = "archer.png";
-		pathsG[3] = "mountaingiant.png";
-		pathsG[4] = "driad.png";
-		pathsG[5] = "chimaera.png";
-		pathsG[6] = "knight.png";
+		pathsG[0] = "goodPiece\\peasant.png";
+		pathsG[1] = "goodPiece\\mountainking.png";
+		pathsG[2] = "goodPiece\\archer.png";
+		pathsG[3] = "goodPiece\\mountaingiant.png";
+		pathsG[4] = "goodPiece\\driad.png";
+		pathsG[5] = "goodPiece\\chimaera.png";
+		pathsG[6] = "goodPiece\\knight.png";
 
-		pathsE[0] = "peon.png";
-		pathsE[1] = "blademaster.png";
-		pathsE[2] = "headhunter.png";
-		pathsE[3] = "abomination.png";
-		pathsE[4] = "shaman.png";
-		pathsE[5] = "frostwyrm.png";
-		pathsE[6] = "wolfrider.png";
+		pathsE[0] = "evilPiece\\peon.png";
+		pathsE[1] = "evilPiece\\blademaster.png";
+		pathsE[2] = "evilPiece\\headhunter.png";
+		pathsE[3] = "evilPiece\\abomination.png";
+		pathsE[4] = "evilPiece\\shaman.png";
+		pathsE[5] = "evilPiece\\frostwyrm.png";
+		pathsE[6] = "evilPiece\\wolfrider.png";
 		
 		pieceT[0] = PieceType.PEASANT;
 		pieceT[1] = PieceType.KING;
