@@ -59,7 +59,7 @@ public class View extends Application
 	int xT,yT;			//MouseMovedEvent; change names of var
 	ArrayList<Integer> possibleMove;
 	ArrayList<Integer> possibleTarget;
-	//WARZM
+	
 	public void start(Stage primaryStage) 
 	{
 		//Definierung der primaryStage + Pane + Scene
