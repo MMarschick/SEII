@@ -3,20 +3,18 @@ package pieces;
 import java.util.ArrayList;
 import java.util.List;
 
-import game.Board;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import pieces.Alliance;
-import pieces.StatusEffect;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.geometry.Insets;
 
+import pieces.Alliance;
+import pieces.StatusEffect;
 
 public class Piece 
 {

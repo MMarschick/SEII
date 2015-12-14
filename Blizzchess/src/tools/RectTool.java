@@ -1,20 +1,19 @@
-package connection;
+package tools;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-
-public class Test extends Canvas
+public class RectTool extends Canvas
 {
 	private GraphicsContext gcCanvas;
-	public GraphicsContext getGcCanvas(){return gcCanvas;}
-	public Test(String color)
+
+	public RectTool(String color)
 	{
 		String colorN = color.toUpperCase();
-		super.setHeight(700);
-		super.setWidth(700);
-		super.setStyle("-fx-border-color: "+colorN+";");
-		gcCanvas = super.getGraphicsContext2D();
+		this.setHeight(700);
+		this.setWidth(700);
+		this.setStyle("-fx-border-color: "+colorN+";");
+		gcCanvas = this.getGraphicsContext2D();
 		gcCanvas.setLineWidth(3);
 		switch(colorN)
 		{
@@ -29,4 +28,7 @@ public class Test extends Canvas
 			break;
 		}
 	}
+	
+	public void drawRect(double x, double y){gcCanvas.rect(x, y, 50, 50);}
+	public void clearRect(){gcCanvas.clearRect(this.getLayoutX(), this.getLayoutY(), this.getWidth(), this.getHeight());}
 }

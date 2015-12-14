@@ -1,5 +1,6 @@
 package stages;
 
+import basal.LoginBasal;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -7,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -18,130 +18,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class Login 
+public class Login extends LoginBasal
 {
-	Button btn;                   //btn: Button fuer die Ausloesung des Logins
-	Stage loginStage, newPlayerStage;
-	GridPane grid, newPlayerGrid;
-	Scene sceneLogin, newPlayerScene;
-	//newPlayer
-	Label l1,l2,l3, l4;
-	TextArea newPlayerInformation;
-	TextField newPlayerName;
-	PasswordField newPlayerPW, newPlayerPWConfirm;
-	Button createBtn, cancelBtn;
-	//
-	Text actiontarget,scenetitle; //actiontarget: Beinhaltet Hinweisnachricht beim Login
-								  //scenetitle: Beinhaltet den Titel der Scene
-	Label opponentIP,serverName,userName, pw;  //einfache Labels fuer die dazugehoerigen TextFields
-	TextField opponentTextField, serverTextField, userTextField; //opponentIP: Beinhaltet IP des Opponents
-	 														  //serverName: Beinhaltet IP des Servers
-															  //userName: Beinhaltet die eigene IP
-	PasswordField pwBox;		  //pwBox: Beinhaltet das Password des Users
-	HBox hbBtn;
-	
-	//Getter-Methoden
-	public Button getBtn()
-	{
-		return btn;
-	}
-	public HBox getHbBtn()
-	{
-		return hbBtn;
-	}
-	public PasswordField getPwBox()
-	{
-		return pwBox;
-	}
-	public Text getActiontarget()
-	{
-		return actiontarget;
-	}
-	public TextField getUserTextField()
-	{
-		return userTextField;
-	}
-	
-	//Getter-Methoden(newPlayer)
-	public Label getL4()
-	{
-		return l4;
-	}
-	public void setL4()
-	{
-		l4.setText("Failed to create");
-	}
-	public Button getCreateBtn()
-	{
-		return createBtn;
-	}
-	public Button getCancelBtn()
-	{
-		return cancelBtn;
-	}
-	public TextField getNewPlayerName()
-	{
-		return newPlayerName;
-	}
-	public PasswordField getNewPlayerPW()
-	{
-		return newPlayerPW;
-	}
-	public PasswordField getNewPlayerPWConfirm()
-	{
-		return newPlayerPWConfirm;
-	}
-	
-	//Methoden zum Schliessen und Oeffnen der Stage
-	public void closeStage()
-	{
-		loginStage.close();
-		clearStrings();
-	}
-	public void showStage()
-	{
-		loginStage.show();
-	}
-	
-	//Methoden zum Schliessen und Oeffnen der Stage(newPlayer)
-	public void closeNewPlayerStage()
-	{
-		newPlayerStage.close();
-		clearStringsNewPlayer();
-	}
-	public void showAndWaitNewPlayerStage()
-	{
-		newPlayerStage.showAndWait();
-	}
-
-	public boolean isVisible()
-	{
-		return loginStage.isShowing();
-	}
-	
-	public boolean newPlayerIsVisible()
-	{
-		return newPlayerStage.isShowing();
-	}
-	
-	public void clearStrings()
-	{
-		getUserTextField().setText("");
-		getPwBox().setText("");
-		getActiontarget().setText("");
-	}
-	
-	public void clearStringsNewPlayer()
-	{
-		if(!newPlayerIsVisible())
-		{
-			getNewPlayerName().setText("");
-			getL4().setText("");
-		}
-		getNewPlayerPW().setText("");
-		getNewPlayerPWConfirm().setText("");
-	}
-	
 	public Login ()
 	{
 		//Definierung der Stage
@@ -176,7 +54,7 @@ public class Login
 		newPlayerGrid.setHgap(5);
 		newPlayerGrid.setVgap(5);
 		newPlayerGrid.setPadding(new Insets(25,25,25,25));
-		newPlayerGrid.setStyle("-fx-background-image: url('newPlayer.png');");
+		newPlayerGrid.setStyle("-fx-background-image: url('boards//newPlayer.png');");
 		newPlayerScene = new Scene(newPlayerGrid, 400, 150);
 		newPlayerStage.setScene(newPlayerScene);
 		
@@ -209,8 +87,6 @@ public class Login
 		pw = new Label("Password:");
 		pw.setTextFill(Color.WHITE);
 		grid.add(pw, 0, 15);
-		
-		
 		
 		pwBox = new PasswordField();
 		grid.add(pwBox, 3, 15);

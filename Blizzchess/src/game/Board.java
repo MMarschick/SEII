@@ -6,16 +6,16 @@ package game;
 
 import java.util.ArrayList;
 
+import basal.BoardBasal;
 import connection.Client;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import pieces.*;
+import tools.GameParser;
 
-public class Board 
+public class Board extends BoardBasal
 {
 	private Piece felder[][] = new Piece[9][9]; //enthaelt Pieces mit der Koordinate als Index
 	private ArrayList<Integer> possibleMove;
@@ -34,9 +34,6 @@ public class Board
 		this.possibleTarget=new ArrayList<Integer>();
 
 		root.getChildren().add(icon); //Aenderung, da sonst Brett ueber Pieces
-		
-		
-
 
 //		Aufbau der Views
 		GameParser.parseBoard(parseString, felder);
@@ -466,11 +463,12 @@ public class Board
 	}
 
 	
-	public void flush(Client player) 
+	public void flush(Client player) throws InterruptedException 
 	{
+		TurnHandling.setWhoseTurnEvil();
 		if(player.synchGame())
 		{
-			System.out.println("Turn gewechselt");
+			Game.waitTurn(player);
 		}
 		else
 		{

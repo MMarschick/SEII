@@ -18,29 +18,20 @@ import javafx.stage.Stage;
 
 public class GameSelect 
 {
-	Button newGameBtn, logoutBtn;
-	ComboBox<String> openGames;
-	Stage selectStage;
-	GridPane grid;
-	Scene selectScene;
-	Text actiontarget; 
-	Label opponentIP;
-	TextField opponentTextField;														  //userName: Beinhaltet die eigene IP
-	HBox hbBtn;
+	private Button newGameBtn, logoutBtn;
+	private ComboBox<String> openGames;
+	private Stage selectStage;
+	private GridPane grid;
+	private Scene selectScene;
+	private Text actiontarget; 
+	private Label opponentIP;
+	private TextField opponentTextField;														  //userName: Beinhaltet die eigene IP
+	private HBox hbBtn;
 	
 	//Getter-Methoden
-	public Button getNewGameBtn()
-	{
-		return newGameBtn;
-	}
-	public Button getLogoutBtn()
-	{
-		return logoutBtn;
-	}
-	public ComboBox<String> getOpenGames()
-	{
-		return openGames;
-	}
+	public Button getNewGameBtn(){return newGameBtn;}
+	public Button getLogoutBtn(){return logoutBtn;}
+	public ComboBox<String> getOpenGames(){return openGames;}
 	public void setOpenGames(List<String> openGamesList)
 	{
 		getOpenGames().getItems().clear();
@@ -50,34 +41,15 @@ public class GameSelect
 	{
 		List<String> openGamesList = new ArrayList<String>();
 		String[] openGames = openGamesString.split(Pattern.quote("|"));
-		for(String openGame : openGames)
-		{
-			openGamesList.add(openGame);
-		}
+		for(String openGame : openGames){openGamesList.add(openGame);}
 		return openGamesList;
 	}
-	public HBox getHbBtn()
-	{
-		return hbBtn;
-	}
-	public Text getActiontarget()
-	{
-		return actiontarget;
-	}
+	public HBox getHbBtn(){return hbBtn;}
+	public Text getActiontarget(){return actiontarget;}
 	//Methoden zum Schlieﬂen und Oeffnen der Stage
-	public void closeStage()
-	{
-		selectStage.close();
-	}
-	public void showStage()
-	{
-		selectStage.show();
-	}
-	
-	public boolean isVisible(){
-		return selectStage.isShowing();
-	}
-	
+	public void closeStage(){selectStage.close();}
+	public void showStage(){selectStage.show();}
+	public boolean isVisible(){return selectStage.isShowing();}
 	public GameSelect ()
 	{
 		//Definierung der Stage

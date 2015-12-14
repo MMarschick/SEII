@@ -1,13 +1,19 @@
-package game;
+package tools;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.regex.Pattern;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import pieces.*;
 
+import game.Board;
+import pieces.Alliance;
+import pieces.Ability;
+import pieces.Piece;
+import pieces.PieceFactory;
+import pieces.PieceType;
+import pieces.StatusEffect;
 
 //Spiel Parser, kann sowohl den aktuellen Spielstand in einen String parsen, als auch aus einem solchen String für ein neues Board dessen Arrays füllen
 public class GameParser 

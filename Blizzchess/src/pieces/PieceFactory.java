@@ -1,8 +1,6 @@
 package pieces;
-import java.util.ArrayList;
 
 import javafx.collections.ObservableList;
-
 
 //Factory zum Erstellen von Pieces, wird verwendet um Pfade nicht in der Klasse Pieces speichern zu müssen
 public class PieceFactory 
