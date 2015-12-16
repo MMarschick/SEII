@@ -77,7 +77,7 @@ public abstract class ViewBasal extends Application
 		actionEvent = new MyAction(primaryStage, root, board, login, menu, info, gameSelect, player);
 		changeEvent = new MyChange(primaryStage, menu, info);
 		mouseEvent = new MyMouse(board, info, turn, player);
-		windowEvent = new MyWindow(menu, info);
+		windowEvent = new MyWindow(menu, info, player);
 		
 		//wird Hauptstage verschoben, verschieben sich beide Leisten entsprechend mit
 		primaryStage.xProperty().addListener(changeEvent);
@@ -91,7 +91,8 @@ public abstract class ViewBasal extends Application
 		
 		//Stage Close Event
 		primaryStage.setOnCloseRequest(windowEvent);
-
+		gameSelect.getSelectStage().setOnCloseRequest(windowEvent);
+		
 		//EventHandler: wenn Login-Button betätigt wird
 		login.getBtn().setOnAction(actionEvent);
 		
@@ -106,5 +107,8 @@ public abstract class ViewBasal extends Application
 		
 		//Event create new Game
 		gameSelect.getNewGameBtn().setOnAction(actionEvent);
+		
+		//Event catch open games
+		gameSelect.getOpenGames().setOnAction(actionEvent);
 	}
 }

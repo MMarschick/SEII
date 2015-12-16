@@ -29,6 +29,7 @@ public class GameSelect
 	private HBox hbBtn;
 	
 	//Getter-Methoden
+	public Stage getSelectStage(){return selectStage;}
 	public Button getNewGameBtn(){return newGameBtn;}
 	public Button getLogoutBtn(){return logoutBtn;}
 	public ComboBox<String> getOpenGames(){return openGames;}

@@ -3,6 +3,7 @@ package game;
 import pieces.Alliance;
 import stages.Menu;
 import stages.View;
+import tools.GameParser;
 import tools.RectTool;
 
 import java.util.ArrayList;
@@ -117,9 +118,7 @@ public class TurnHandling
 				// attacke
 				board.getPiece(View.getxNew(),View.getyNew()).attack();
 				turnState.setValue(0);
-				board.update(View.getxNew(),View.getyNew(), board.getPiece(View.getxNew(),View.getyNew()));
-				try {board.flush(player);} 
-				catch (InterruptedException e) {e.printStackTrace();}
+//				board.update(View.getxNew(),View.getyNew(), board.getPiece(View.getxNew(),View.getyNew()));
 			}
 		}
 
@@ -134,7 +133,9 @@ public class TurnHandling
 		green.clearRect();
 		orchid.clearRect();
 
-		board.update(View.getxNew(),View.getyNew(), board.getPiece(View.getxNew(),View.getyNew()));
+//		board.update(View.getxNew(),View.getyNew(), board.getPiece(View.getxNew(),View.getyNew()));
+//		try {board.flush(player);} 
+//		catch (InterruptedException e) {e.printStackTrace();}
 	}
 	
 	public void state2(MouseEvent event, Board board, Client player)
@@ -155,11 +156,15 @@ public class TurnHandling
 				else
 					whoseTurn = Alliance.GOOD;
 				red.clearRect();
-				try {board.flush(player);} 
+				
+				try {
+					player.synchBoard(GameParser.parseString(board));
+					board.flush(player);} 
 				catch (InterruptedException e) {e.printStackTrace();}
 				System.out.println("case 2");
 			}
 		}
+		board.update(View.getxNew(),View.getyNew(), board.getPiece(View.getxNew(),View.getyNew()));
 		menu.setButtonImage(2);
 	}
 }

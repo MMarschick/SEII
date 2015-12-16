@@ -3,9 +3,12 @@ package stages;
 import java.util.concurrent.CountDownLatch;
 
 import basal.ViewBasal;
+import game.Board;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import listener.MyAction;
+import listener.MyMouse;
 
 public class View extends ViewBasal 
 {
@@ -42,4 +45,5 @@ public class View extends ViewBasal
 		//Events hinzufuegen
 		this.setEvents(primaryStage, scene, root);
 	}
+	
 }

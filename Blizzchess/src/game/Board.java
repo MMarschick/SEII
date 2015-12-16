@@ -28,6 +28,7 @@ public class Board extends BoardBasal
 	//Konstruktor; erstellt aus einem parseString ein Bord; fügt das Board-Icon der View hinzu
 	public Board(BorderPane root, String parseString)
 	{
+		
 		board = new Image("boards\\Board.png"); //Spielbrett
 		icon = new ImageView(board);
 		this.possibleMove=new ArrayList<Integer>();
@@ -74,8 +75,9 @@ public class Board extends BoardBasal
 	}
 
 	public void update(int i, int j, Piece currPiece) {
-
+		
 		if (isPiece(i, j)) {
+			System.out.println("update " + i + " " + j);
 			currPiece.getIcon().setX(i * 50 + 5);
 			currPiece.getIcon().setY(j * 50 + 5);
 			currPiece.getAvatarView().setX(i * 50);

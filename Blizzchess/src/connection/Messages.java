@@ -23,8 +23,12 @@ public abstract class Messages
     protected String playerTwo;
     
     //Setter-Methoden
+    public String getPlayerName(){return playerName;}
+    public void setPlayerOne(String playerOne){this.playerOne=playerOne;}
+    public void setPlayerTwo(String playerTwo){this.playerTwo=playerTwo;}
     public void setPlayerName(String playerName){this.playerName=playerName;}
     public void setPlayerPW(String playerPW){this.playerPW=playerPW;}
+    public void setOpponentName(String opponentName){this.opponentName=opponentName;}
     public void setBufferedWriter(BufferedWriter bw){this.bw=bw;}
     public void setBufferedReader(BufferedReader br){this.br=br;}
 	
@@ -88,12 +92,14 @@ public abstract class Messages
 		sendMessage("synchBoard", playerOne+"|"+playerTwo+"|"+board);
     	try
     	{
-    		while(!gotBoard)
-    		{
-    			gotBoard=Boolean.valueOf(br.readLine());
-    			if(!gotBoard){gotBoard=synchBoard(board);}
-    		}
-    		return gotBoard;
+//    		while(!gotBoard)
+//    		{
+//    			gotBoard=Boolean.valueOf(br.readLine());
+//    			if(!gotBoard){gotBoard=synchBoard(board);}
+//    		}
+//    		return gotBoard;
+    		br.readLine();
+    		return true;
     	}
     	catch(Exception e){e.printStackTrace();}
     	return gotBoard;
@@ -179,9 +185,6 @@ public abstract class Messages
     //Erhalte ein Spiel mit playerOne/playerTwo
 	public String getGame() 
 	{
-		playerOne=playerName;
-		playerTwo="XXGamerXX";
-		opponentName="XXGamerXX";
 		sendMessage("game", playerOne+"|"+playerTwo);
 		try{return br.readLine();}
 		catch (Exception e){System.out.println(e.getMessage());}

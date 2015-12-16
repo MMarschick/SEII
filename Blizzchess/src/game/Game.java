@@ -12,8 +12,9 @@ public class Game{
 	public static void waitTurn(Client player) throws InterruptedException
 	{
 		player.waitForTurn();
-		System.out.println("its rolling");
+		System.out.println("its my turn");
 		TurnHandling.setWhoseTurnGood();
+//		View.setEventBoards(new Board(Board.getRoot(), player.getGame()));
 	}
 	
 	public static void main(String[] args) 

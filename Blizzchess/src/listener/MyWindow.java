@@ -1,5 +1,6 @@
 package listener;
 
+import connection.Client;
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
 import stages.Info;
@@ -9,11 +10,13 @@ public class MyWindow implements EventHandler<WindowEvent>
 {
 	private Menu menu;
 	private Info info;
+	private Client player;
 
-	public MyWindow(Menu menu, Info info)
+	public MyWindow(Menu menu, Info info, Client player)
 	{
 		this.menu=menu;
 		this.info=info;
+		this.player=player;
 	}
 	
 	public void handle(WindowEvent we)
@@ -23,6 +26,7 @@ public class MyWindow implements EventHandler<WindowEvent>
 		case "WINDOW_CLOSE_REQUEST":
 			closingPrimary();
 			break;
+			//Showing/Hiding-Event
 		}
 	}
 
@@ -31,5 +35,6 @@ public class MyWindow implements EventHandler<WindowEvent>
 		// TODO Auto-generated method stub
 		menu.closeStage();
 		info.closeStage();
+		player.checkLogout();
 	}
 }

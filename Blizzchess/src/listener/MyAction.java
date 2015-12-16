@@ -6,11 +6,14 @@ import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import stages.GameSelect;
 import stages.Info;
 import stages.Login;
 import stages.Menu;
 import stages.View;
+import tools.GameParser;
 
 public class MyAction implements EventHandler<ActionEvent>
 {
@@ -39,36 +42,54 @@ public class MyAction implements EventHandler<ActionEvent>
 	
 	public void handle(ActionEvent ae) 
 	{
-		String labelBtn = ae.getTarget().toString().substring(ae.getTarget().toString().indexOf('\''));
-		labelBtn=labelBtn.substring(1, labelBtn.length()-1);
-		switch(labelBtn)
+		String typeObject=" ";
+		ComboBox chooseGame = new ComboBox();
+		if(ae.getSource().getClass().toString().endsWith("Button"))
+		{
+			typeObject = ae.getTarget().toString().substring(ae.getTarget().toString().indexOf('\''));
+			typeObject=typeObject.substring(1, typeObject.length()-1);
+		}
+		else if(ae.getSource().getClass().toString().endsWith("ComboBox"))
+		{
+			chooseGame = (ComboBox)ae.getSource();
+			typeObject = "Get Game"; 
+		}
+
+		switch(typeObject)
 		{
 		case "Create":
-			System.out.println(labelBtn);
 			createPlayer();
 			break;
 		case "Cancel":
-			System.out.println(labelBtn);
 			cancelCreate();
 			break;
 		case "Sign out":
-			System.out.println(labelBtn);
 			logout();
 			break;
 		case "New Game":
-			System.out.println(labelBtn);
 			newGame();
 			break;
 		case "Sign in":
-			System.out.println(labelBtn);
 			login();
+			break;
+		case "Get Game":
+			getGame(chooseGame);
 			break;
 		}
 	}
 	
+	private void getGame(ComboBox chooseGame)
+	{
+		String[] gameData = chooseGame.getSelectionModel().getSelectedItem().toString().split(" ");
+		player.setPlayerOne(gameData[1]);
+		player.setPlayerTwo(gameData[3]);
+		if(player.getPlayerName().equals(gameData[1])) {player.setOpponentName(gameData[3]);}
+		else{player.setOpponentName(gameData[1]);}
+		newGame();
+	}
+	
 	private void login() 
 	{
-		// TODO Auto-generated method stub
 		login.getActiontarget().setFill(Color.YELLOW);
 		login.getActiontarget().setText("connecting...");
 
@@ -94,6 +115,7 @@ public class MyAction implements EventHandler<ActionEvent>
 	private void newGame() 
 	{
 		// TODO Auto-generated method stub
+		//suche hinzufuegen (neues spiel, neuer gegner)
 		board = new Board(root, player.getGame()); //set-Methode
 		gameSelect.closeStage();
 		primaryStage.show();
@@ -106,7 +128,6 @@ public class MyAction implements EventHandler<ActionEvent>
 	
 	private void logout() 
 	{
-		// TODO Auto-generated method stub
 		try
 		{
 			if(player.checkLogout())
@@ -122,7 +143,6 @@ public class MyAction implements EventHandler<ActionEvent>
 	
 	private void createPlayer() 
 	{
-		// TODO Auto-generated method stub
 		if(!login.getNewPlayerName().getText().equals("")&&
 				!login.getNewPlayerPW().getText().equals("")&&
 				login.getNewPlayerPWConfirm().getText().equals(login.getNewPlayerPW().getText()))
