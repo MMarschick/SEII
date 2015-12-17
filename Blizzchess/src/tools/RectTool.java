@@ -29,6 +29,6 @@ public class RectTool extends Canvas
 		}
 	}
 	
-	public void drawRect(double x, double y){gcCanvas.rect(x, y, 50, 50);}
+	public void drawRect(double x, double y){gcCanvas.strokeRect(x, y, 50, 50);}
 	public void clearRect(){gcCanvas.clearRect(this.getLayoutX(), this.getLayoutY(), this.getWidth(), this.getHeight());}
 }

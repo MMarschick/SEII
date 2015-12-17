@@ -93,6 +93,12 @@ public abstract class ViewBasal extends Application
 		primaryStage.setOnCloseRequest(windowEvent);
 		gameSelect.getSelectStage().setOnCloseRequest(windowEvent);
 		
+		//new Stage Close
+		primaryStage.setOnHidden(windowEvent);
+		primaryStage.setOnShown(windowEvent);
+//		primaryStage.iconifiedProperty().addListener(changeEvent);
+//		primaryStage.maximizedProperty().addListener(changeEvent);
+		
 		//EventHandler: wenn Login-Button betätigt wird
 		login.getBtn().setOnAction(actionEvent);
 		

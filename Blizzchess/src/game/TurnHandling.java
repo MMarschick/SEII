@@ -28,8 +28,9 @@ public class TurnHandling
 	public static Alliance whoseTurn=Alliance.GOOD;
 	IntegerProperty turnState = new SimpleIntegerProperty();
 	
-	public static void setWhoseTurnEvil(){whoseTurn=Alliance.EVIL;}
-	public static void setWhoseTurnGood(){whoseTurn=Alliance.GOOD;}
+//	public static void setWhoseTurnEvil(){whoseTurn=Alliance.EVIL;}
+//	public static void setWhoseTurnGood(){whoseTurn=Alliance.GOOD;}
+	public static void switchWhoseTurn(){if(whoseTurn==Alliance.EVIL)whoseTurn=Alliance.GOOD;else whoseTurn=Alliance.EVIL;}
 	public Alliance getWhoseTurn(){return whoseTurn;}
 	public IntegerProperty getTurnState(){return turnState;}
 	
@@ -56,7 +57,7 @@ public class TurnHandling
 		System.out.println("case 0    " + whoseTurn);
 		View.setX((int) (event.getX() - board.getIcon().getX()) / 50);
 		View.setY((int) (event.getY() - board.getIcon().getY()) / 50);
-		if (board.isPiece(View.getX(), View.getY())) {
+		if (board.isMyPiece(View.getX(), View.getY())) {
 			board.calculateMovement(View.getX(), View.getY());
 			board.calculateTargets(View.getX(), View.getY());
 
@@ -67,6 +68,7 @@ public class TurnHandling
 			for (Integer movementInt : possibleMove) {
 				int greenX = movementInt / 10;
 				int greenY = movementInt % 10;
+				System.out.println(green.getStyle());
 				green.drawRect(greenX*50, greenY*50);
 			}
 			for (Integer targetInt : possibleTarget) {
@@ -92,6 +94,7 @@ public class TurnHandling
 		for (Integer movementInt : possibleMove) {
 			if (koordInt == movementInt) {
 				board.setPiece(View.getX(), View.getY(),View.getxNew(),View.getyNew());
+				board.update();
 				View.setX(View.getxNew());
 				View.setY(View.getyNew());
 				turnState.setValue(2);
@@ -164,7 +167,7 @@ public class TurnHandling
 				System.out.println("case 2");
 			}
 		}
-		board.update(View.getxNew(),View.getyNew(), board.getPiece(View.getxNew(),View.getyNew()));
+		board.update();
 		menu.setButtonImage(2);
 	}
 }

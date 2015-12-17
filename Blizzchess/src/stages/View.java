@@ -5,10 +5,13 @@ import java.util.concurrent.CountDownLatch;
 import basal.ViewBasal;
 import game.Board;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import listener.MyAction;
 import listener.MyMouse;
+import tools.RectTool;
 
 public class View extends ViewBasal 
 {
@@ -38,7 +41,10 @@ public class View extends ViewBasal
 		primaryStage.setScene(scene);
 		
 		login.showStage();
-			
+		
+		Image board = new Image("boards\\Board.png"); //Spielbrett
+		ImageView icon = new ImageView(board);
+		root.getChildren().add(icon); //Aenderung, da sonst Brett ueber Pieces
 		//Add Canvas/GraphicsContext
 		root.getChildren().addAll(canvasRed, canvasGreen, canvasOrchid);
 

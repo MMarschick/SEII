@@ -42,9 +42,9 @@ public class MyMouse implements EventHandler<MouseEvent>
 	
 	private void updateInfo(MouseEvent event) 
 	{
-		// TODO Auto-generated method stub
 		View.setxT((int)(event.getX()-board.getIcon().getX())/50);
 		View.setyT((int)(event.getY()-board.getIcon().getY())/50);
+		board.update();
 
 		if(board.isPiece(View.getxT(), View.getyT())) //befuellen, wenn piece
 		{
@@ -56,6 +56,7 @@ public class MyMouse implements EventHandler<MouseEvent>
 	private void turnExecution(MouseEvent me) 
 	{
 		// TODO Auto-generated method stub
+		//Alliance abfragen und zuweisung anpassen
 		if(turn.getWhoseTurn()==board.getMyAlliance())
 		{
 			try {handleTurn(board, me);} 
@@ -70,8 +71,8 @@ public class MyMouse implements EventHandler<MouseEvent>
 	
 	private void handleTurn(Board board, MouseEvent event) throws InterruptedException 
 	{
-		if (turn.getWhoseTurn() == Alliance.EVIL) {System.out.println("evil");} 
-		else 
+//		if (turn.getWhoseTurn() == Alliance.EVIL) {System.out.println("evil");}
+		if(turn.getWhoseTurn() == Board.getMyAlliance())
 		{
 			// Switch-Case in Game
 			switch (turn.getTurnState().getValue()) {

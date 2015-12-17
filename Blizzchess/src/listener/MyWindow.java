@@ -25,16 +25,25 @@ public class MyWindow implements EventHandler<WindowEvent>
 		{
 		case "WINDOW_CLOSE_REQUEST":
 			closingPrimary();
+		case "WINDOW_HIDDEN":
+			hiddingPrimary();
 			break;
-			//Showing/Hiding-Event
+		case "WINDOW_SHOWN":
+			showingPrimary();
+			break;
 		}
 	}
 
-	private void closingPrimary() 
+	private void closingPrimary(){player.checkLogout();}
+	private void hiddingPrimary()
 	{
-		// TODO Auto-generated method stub
 		menu.closeStage();
 		info.closeStage();
-		player.checkLogout();
+	}
+	
+	private void showingPrimary()
+	{
+		menu.showStage();
+		info.showStage();
 	}
 }

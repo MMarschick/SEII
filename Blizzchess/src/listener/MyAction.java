@@ -4,6 +4,7 @@ import game.Board;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
+import pieces.Alliance;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
@@ -83,8 +84,8 @@ public class MyAction implements EventHandler<ActionEvent>
 		String[] gameData = chooseGame.getSelectionModel().getSelectedItem().toString().split(" ");
 		player.setPlayerOne(gameData[1]);
 		player.setPlayerTwo(gameData[3]);
-		if(player.getPlayerName().equals(gameData[1])) {player.setOpponentName(gameData[3]);}
-		else{player.setOpponentName(gameData[1]);}
+		if(player.getPlayerName().equals(gameData[1])) {player.setOpponentName(gameData[3]); Board.setMyAlliance("GOOD");}
+		else{player.setOpponentName(gameData[1]); Board.setMyAlliance("EVIL");}
 		newGame();
 	}
 	
@@ -120,9 +121,7 @@ public class MyAction implements EventHandler<ActionEvent>
 		gameSelect.closeStage();
 		primaryStage.show();
 		menu.setPosition(primaryStage);
-		menu.showStage();
-		info.setPosition(primaryStage);
-		info.showStage();	
+		info.setPosition(primaryStage);	
 		View.setEventBoards(board);
 	}
 	

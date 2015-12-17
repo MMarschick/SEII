@@ -14,16 +14,32 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import pieces.*;
 import tools.GameParser;
+import tools.RectTool;
 
 public class Board extends BoardBasal
 {
 	private Piece felder[][] = new Piece[9][9]; //enthaelt Pieces mit der Koordinate als Index
 	private ArrayList<Integer> possibleMove;
 	private ArrayList<Integer> possibleTarget;
-	private Alliance myAlliance=Alliance.GOOD;
+	private static Alliance myAlliance;
 	private ImageView icon;
 	private Image board;
-	Pane pane = new Pane();
+	private Pane pane = new Pane();
+	
+	public static void setMyAlliance(String alliance)
+	{
+		if(alliance.equals("GOOD")) myAlliance=Alliance.GOOD;
+		else myAlliance=Alliance.EVIL;
+	}
+	public static Alliance getMyAlliance(){return myAlliance;}
+	//Getter
+	public Piece getPiece(int x, int y){return felder[x][y];}
+	public Piece[][] getFelder(){return felder;}
+	public Image getBoard(){return board;}
+	public ImageView getIcon(){return icon;}
+	public Image getImage(int x, int y){return felder[x][y].getImage();}
+	public ArrayList<Integer> getPossibleMove(){return possibleMove;}
+	public ArrayList<Integer> getPossibleTarget(){return possibleTarget;}
 	
 	//Konstruktor; erstellt aus einem parseString ein Bord; fügt das Board-Icon der View hinzu
 	public Board(BorderPane root, String parseString)
@@ -31,10 +47,9 @@ public class Board extends BoardBasal
 		
 		board = new Image("boards\\Board.png"); //Spielbrett
 		icon = new ImageView(board);
+//		root.getChildren().add(icon); //Aenderung, da sonst Brett ueber Pieces
 		this.possibleMove=new ArrayList<Integer>();
 		this.possibleTarget=new ArrayList<Integer>();
-
-		root.getChildren().add(icon); //Aenderung, da sonst Brett ueber Pieces
 
 //		Aufbau der Views
 		GameParser.parseBoard(parseString, felder);
@@ -67,39 +82,43 @@ public class Board extends BoardBasal
 					root.getChildren().add(currPiece.getHealthView());
 					
 					pane.getChildren().add(currPiece.getHealthLabel());
-					update(i, j, currPiece);
+					update();
 				}
 			}
 		}
 		root.getChildren().add(pane);
 	}
 
-	public void update(int i, int j, Piece currPiece) {
-		
-		if (isPiece(i, j)) {
-			System.out.println("update " + i + " " + j);
-			currPiece.getIcon().setX(i * 50 + 5);
-			currPiece.getIcon().setY(j * 50 + 5);
-			currPiece.getAvatarView().setX(i * 50);
-			currPiece.getAvatarView().setY(j * 50);
-			currPiece.getSavageryView().setX(i * 50);
-			currPiece.getSavageryView().setY(j * 50);
-			currPiece.getPoisonView().setX(i * 50 - 5);
-			currPiece.getPoisonView().setY(j * 50 + 20);
-			currPiece.getTauntingView().setX(i * 50);
-			currPiece.getTauntingView().setY(j * 50);
-			currPiece.getFreezeView().setX(i * 50);
-			currPiece.getFreezeView().setY(j * 50);
-			currPiece.setHealthLabel(currPiece.getHealth());
-			currPiece.getHealthView().setX(i * 50 + 25);
-			currPiece.getHealthView().setY(j * 50 + 25);
+	public void update() {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				if (felder[i][j] != null) {
+					Piece currPiece = felder[i][j];
+					System.out.println("update " + i + " " + j);
+					currPiece.getIcon().setX(i * 50 + 5);
+					currPiece.getIcon().setY(j * 50 + 5);
+					currPiece.getAvatarView().setX(i * 50);
+					currPiece.getAvatarView().setY(j * 50);
+					currPiece.getSavageryView().setX(i * 50);
+					currPiece.getSavageryView().setY(j * 50);
+					currPiece.getPoisonView().setX(i * 50 - 5);
+					currPiece.getPoisonView().setY(j * 50 + 20);
+					currPiece.getTauntingView().setX(i * 50);
+					currPiece.getTauntingView().setY(j * 50);
+					currPiece.getFreezeView().setX(i * 50);
+					currPiece.getFreezeView().setY(j * 50);
+					currPiece.setHealthLabel(currPiece.getHealth());
+					currPiece.getHealthView().setX(i * 50 + 25);
+					currPiece.getHealthView().setY(j * 50 + 25);
 
-			if (currPiece.getHealth() < 10) {
-				currPiece.getHealthLabel().setTranslateX(i * 50 + 34);
-				currPiece.getHealthLabel().setTranslateY(j * 50 + 30);
-			} else {
-				currPiece.getHealthLabel().setTranslateX(i * 50 + 34);
-				currPiece.getHealthLabel().setTranslateY(j * 50 + 27);
+					if (currPiece.getHealth() < 10) {
+						currPiece.getHealthLabel().setTranslateX(i * 50 + 34);
+						currPiece.getHealthLabel().setTranslateY(j * 50 + 30);
+					} else {
+						currPiece.getHealthLabel().setTranslateX(i * 50 + 34);
+						currPiece.getHealthLabel().setTranslateY(j * 50 + 27);
+					}
+				}
 			}
 		}
 	}
@@ -129,8 +148,8 @@ public class Board extends BoardBasal
 	public void setPiece(int x, int y, int kx, int ky)
 	{
 		//PieceViews
-		felder[x][y].getIcon().setX(kx*50+5);
-		felder[x][y].getIcon().setY(ky*50+5);
+//		felder[x][y].getIcon().setX(kx*50+5);
+//		felder[x][y].getIcon().setY(ky*50+5);
 		
 		//weitere Views wie Poisened
 		//...
@@ -140,16 +159,6 @@ public class Board extends BoardBasal
 		felder[x][y]=null;
 		
 	}
-
-	//Getter
-	public Piece getPiece(int x, int y){return felder[x][y];}
-	public Piece[][] getFelder(){return felder;}
-	public Alliance getMyAlliance(){return myAlliance;}
-	public Image getBoard(){return board;}
-	public ImageView getIcon(){return icon;}
-	public Image getImage(int x, int y){return felder[x][y].getImage();}
-	public ArrayList<Integer> getPossibleMove(){return possibleMove;}
-	public ArrayList<Integer> getPossibleTarget(){return possibleTarget;}
 
 	//Berechnet alle Ziele die dem Piece an der Stelle x,y im Array Felder zur Verfügung stehen
 	public void calculateTargets(int x, int y)
@@ -467,10 +476,13 @@ public class Board extends BoardBasal
 	
 	public void flush(Client player) throws InterruptedException 
 	{
-		TurnHandling.setWhoseTurnEvil();
+		TurnHandling.switchWhoseTurn();
 		if(player.synchGame())
 		{
 			Game.waitTurn(player);
+			felder = new Piece[9][9];
+			GameParser.parseBoard(player.getGame(), felder);
+			update();
 		}
 		else
 		{

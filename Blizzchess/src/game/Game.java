@@ -11,10 +11,16 @@ public class Game{
 	
 	public static void waitTurn(Client player) throws InterruptedException
 	{
+//		Alert alert = new Alert(AlertType.INFORMATION);
+//		alert.setTitle("Information Dialog");
+//		alert.setHeaderText(null);
+//		alert.setContentText("I have a great message for you!");
+//
+//		alert.showAndWait();
+		
 		player.waitForTurn();
 		System.out.println("its my turn");
-		TurnHandling.setWhoseTurnGood();
-//		View.setEventBoards(new Board(Board.getRoot(), player.getGame()));
+		TurnHandling.switchWhoseTurn();
 	}
 	
 	public static void main(String[] args) 

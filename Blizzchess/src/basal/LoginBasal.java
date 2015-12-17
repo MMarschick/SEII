@@ -10,6 +10,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tools.RectTool;
 
 public abstract class LoginBasal 
 {
@@ -17,7 +18,6 @@ public abstract class LoginBasal
 	protected Stage loginStage, newPlayerStage;
 	protected GridPane grid, newPlayerGrid;
 	protected Scene sceneLogin, newPlayerScene;
-	
 
 	//newPlayer
 	protected Label l1,l2,l3, l4;
