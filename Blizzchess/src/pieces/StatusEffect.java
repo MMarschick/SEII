@@ -23,5 +23,10 @@ public class StatusEffect
 	//Getter
 	public Ability getAbility(){return ability;}
 	public int getRemainingDuration(){return remainingDuration;}
+
+	public void diminishRemainingDurationByOne() {
+		--remainingDuration;
+		
+	}
 	
 }

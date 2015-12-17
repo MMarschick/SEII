@@ -94,8 +94,36 @@ public class Piece
 		}
 	}
 	
-	public void attack() {
-		health=health-getPieceT().getAttackValue();
+	public void attack(Piece attackingPiece) {
+		int dmg=attackingPiece.getPieceT().getAttackValue();
+		if(attackingPiece.checkForStatusEffect(Ability.SAVAGERY))dmg+=Ability.SAVAGERY.getDamage();
+		health=health-dmg;
+	}
+	
+	public void flushStatusEffects()
+	{
+		for(int i=0;i<statusEffects.size();i++)
+		{
+			StatusEffect sEffect=statusEffects.get(i);
+			if(sEffect.getRemainingDuration()>1)
+			{
+				switch(sEffect.getAbility())
+				{
+				case POISON: health-=sEffect.getAbility().getDamage();
+				default: sEffect.diminishRemainingDurationByOne(); break;
+				}
+			}
+			else
+			{
+				switch(sEffect.getAbility())
+				{
+				case POISON: health-=sEffect.getAbility().getDamage(); break;
+				case AVATAR: if(this.health>this.getPieceT().getMaxHealth())this.health=this.getPieceT().getMaxHealth();
+				}
+				
+				statusEffects.remove(i--);
+			}
+		}
 	}
 
 	//Getter
@@ -119,6 +147,11 @@ public class Piece
 	public void setHealthLabel(int h) {
 		healthLabel.setText(h>=10?""+h/10+"\n"+h%10:""+h);
 		
+	}
+
+	public boolean checkForStatusEffect(Ability freeze2) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
 

@@ -123,6 +123,39 @@ public class Board extends BoardBasal
 		}
 	}
 	
+	public boolean checkTargetsForTaunts()
+	{
+		boolean tauntsFound=false;
+		ArrayList<Integer> tauntTargets=new ArrayList<Integer>();
+		for(int i=-1;i<2;i++)
+		{
+			for(int j=-1;j<2;j++)
+			{
+				for(StatusEffect sEffect : felder[i][j].getStatusEffects())
+				{
+					if(sEffect.getAbility()==Ability.TAUNT)
+					{
+						tauntTargets.add(10*i+j);
+						tauntsFound=true;
+						break;
+					}
+				}
+			}
+		}
+		if(!tauntTargets.isEmpty())
+		{
+			this.possibleTarget=tauntTargets;
+		}
+		return tauntsFound;
+	}
+	
+	
+	
+	public void checkTargetsAndMovementsForTaunts()
+	{
+		if(this.checkTargetsForTaunts()) this.possibleMove=new ArrayList<Integer>();
+	}
+	
 	//Überprüft ob an der Stelle x,y im Array felder ein Piece steht
 	public boolean isPiece(int x, int y)
 	{
@@ -473,6 +506,19 @@ public class Board extends BoardBasal
 		else return false;
 	}
 
+
+public void updateBoard()
+	{
+		for(int i=0;i<9;i++)
+		{
+			for(int j=0;j<9;j++)
+			{
+				getPiece(i, j).flushStatusEffects();
+				if(getPiece(i, j).getHealth()<1)felder[i][j]=null;
+				update();
+			}
+		}
+	}
 	
 	public void flush(Client player) throws InterruptedException 
 	{
