@@ -25,12 +25,12 @@ public class TurnHandling
 	ArrayList<Integer> possibleMove;
 	ArrayList<Integer> possibleTarget;
 	
-	public static Alliance whoseTurn=Alliance.GOOD;
+	public static Alliance whoseTurn;
 	IntegerProperty turnState = new SimpleIntegerProperty();
 	
 //	public static void setWhoseTurnEvil(){whoseTurn=Alliance.EVIL;}
 //	public static void setWhoseTurnGood(){whoseTurn=Alliance.GOOD;}
-	public static void switchWhoseTurn(){if(whoseTurn==Alliance.EVIL)whoseTurn=Alliance.GOOD;else whoseTurn=Alliance.EVIL;}
+	public static void switchWhoseTurn(){if(whoseTurn==Alliance.EVIL)whoseTurn=Alliance.GOOD;else whoseTurn=Alliance.EVIL;System.out.println("Switching Turn to: "+whoseTurn);}
 	public Alliance getWhoseTurn(){return whoseTurn;}
 	public IntegerProperty getTurnState(){return turnState;}
 	
@@ -68,7 +68,7 @@ public class TurnHandling
 			for (Integer movementInt : possibleMove) {
 				int greenX = movementInt / 10;
 				int greenY = movementInt % 10;
-				System.out.println(green.getStyle());
+//				System.out.println(green.getStyle());
 				green.drawRect(greenX*50, greenY*50);
 			}
 			for (Integer targetInt : possibleTarget) {
@@ -130,9 +130,7 @@ public class TurnHandling
 			turnState.setValue(0);
 		}
 
-		// Sobald ein Piece sich bewegt hat, muessen die
-		// gezeichneten Quadrate entfernt werden
-		// Canvas wird anschliessend entfernt
+		// Sobald ein Piece sich bewegt hat, muessen die gezeichneten Quadrate entfernt werden
 		green.clearRect();
 		orchid.clearRect();
 
@@ -154,12 +152,11 @@ public class TurnHandling
 				board.getPiece(View.getxNew(),View.getyNew()).attack();
 				board.getPiece(View.getxNew(),View.getyNew()).setHealthLabel(board.getPiece(View.getxNew(),View.getyNew()).getHealth());
 				turnState.setValue(0);
-				if (whoseTurn == Alliance.GOOD)
-					whoseTurn = Alliance.EVIL;
-				else
-					whoseTurn = Alliance.GOOD;
+//				if (whoseTurn == Alliance.GOOD)
+//					whoseTurn = Alliance.EVIL;
+//				else
+//					whoseTurn = Alliance.GOOD;
 				red.clearRect();
-				
 				try {
 					player.synchBoard(GameParser.parseString(board));
 					board.flush(player);} 

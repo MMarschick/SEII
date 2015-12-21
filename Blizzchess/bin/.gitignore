@@ -1,11 +1,7 @@
-/basal/
-/boards/
-/connection/
-/evilPiece/
 /game/
-/goodPiece/
+/connection/
 /listener/
-/pieces/
-/stages/
-/state/
+/basal/
 /tools/
+/stages/
+/pieces/

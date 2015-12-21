@@ -1,6 +1,7 @@
 package listener;
 import connection.Client;
 import game.Board;
+import game.TurnHandling;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
@@ -64,14 +65,17 @@ public class MyAction implements EventHandler<ActionEvent>
 		case "Cancel":
 			cancelCreate();
 			break;
-		case "Sign out":
+		case "Logout":
 			logout();
 			break;
 		case "New Game":
-			newGame();
+			searchGame();
+			break;
+		case "Login":
+			login();
 			break;
 		case "Sign in":
-			login();
+			login.showAndWaitNewPlayerStage();
 			break;
 		case "Get Game":
 			getGame(chooseGame);
@@ -84,6 +88,12 @@ public class MyAction implements EventHandler<ActionEvent>
 		String[] gameData = chooseGame.getSelectionModel().getSelectedItem().toString().split(" ");
 		player.setPlayerOne(gameData[1]);
 		player.setPlayerTwo(gameData[3]);
+		if(gameData[5].equals(player.getPlayerName()))TurnHandling.whoseTurn=Board.getMyAlliance();
+		else
+		{
+			TurnHandling.whoseTurn=Board.getMyAlliance();
+			TurnHandling.switchWhoseTurn();
+		}
 		if(player.getPlayerName().equals(gameData[1])) {player.setOpponentName(gameData[3]); Board.setMyAlliance("GOOD");}
 		else{player.setOpponentName(gameData[1]); Board.setMyAlliance("EVIL");}
 		newGame();
@@ -97,20 +107,33 @@ public class MyAction implements EventHandler<ActionEvent>
 		player.setPlayerName(login.getUserTextField().getText());
 		player.setPlayerPW(login.getPwBox().getText());
 
-		//ueberprueft, ob Name und Passwort uebereinstimmt
-		if(player.checkLogin())
+		if(login.getUserTextField().getText().length()>0 && login.getPwBox().getText().length()>0)
 		{
-			login.closeStage();
-			login.clearStrings();
-			gameSelect.setOpenGames(gameSelect.createOpenGamesList(player.getOpenGames()));
-			gameSelect.showStage();
+			//ueberprueft, ob Name und Passwort uebereinstimmt
+			if(player.checkLogin())
+			{
+				login.closeStage();
+				login.clearStrings();
+				gameSelect.setOpenGames(gameSelect.createOpenGamesList(player.getOpenGames()));
+				gameSelect.showStage();
+			}
+			else
+			{
+				login.getActiontarget().setFill(Color.RED);
+				login.getActiontarget().setText("Could not login");
+//				login.showAndWaitNewPlayerStage();
+			}
 		}
 		else
 		{
 			login.getActiontarget().setFill(Color.RED);
-			login.getActiontarget().setText("Could not login");
-			login.showAndWaitNewPlayerStage();
-		}	
+			login.getActiontarget().setText("Some fields are empty");
+		}
+	}
+	
+	private void searchGame()
+	{
+		System.out.println(player.searchGame());
 	}
 	
 	private void newGame() 

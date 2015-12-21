@@ -171,6 +171,19 @@ public abstract class Messages
     	return false;
     }
     
+    //warten auf turn
+    public boolean waitingTurn()
+    {
+    	sendMessage("waitingTurn", playerOne+"|"+playerTwo+"|"+playerName);
+    	try
+    	{
+    		if(br.readLine().equals("true")){return true;}
+    	}
+    	catch (Exception e){System.out.println(e.getMessage());}
+    	return false;
+    }
+    
+    //Aktualisiere den Game-String von Game playerOne/playerTwo
     public boolean synchGame()
     {
     	sendMessage("synchGame", playerOne+"|"+playerTwo+"|"+opponentName);

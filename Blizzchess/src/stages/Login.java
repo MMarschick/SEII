@@ -36,67 +36,73 @@ public class Login extends LoginBasal
 		newPlayerStage.initStyle(StageStyle.UNDECORATED);
 		
 		//Definierung der Scene/Pane; Setzen der Grund Stage
-    	grid = new GridPane();
-		grid.setAlignment(Pos.CENTER);
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(25,25,25,25));
-		grid.setStyle("-fx-background-image: url('boards//alliances.png');");
-		sceneLogin = new Scene(grid, 400, 340);
+    	gridLogin = new GridPane();
+		gridLogin.setAlignment(Pos.CENTER);
+		gridLogin.setHgap(10);
+		gridLogin.setVgap(10);
+		gridLogin.setPadding(new Insets(25,25,25,25));
+		gridLogin.setStyle("-fx-background-image: url('boards//alliances.png');");
+		sceneLogin = new Scene(gridLogin, 400, 340);
 		scenetitle = new Text("Welcome to Blizzchess");
 		scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		scenetitle.setFill(Color.CORNFLOWERBLUE);
-		grid.add(scenetitle, 0, 3);
+		gridLogin.add(scenetitle, 0, 3);
 		loginStage.setScene(sceneLogin);
 		
 		//Definierung der Scene/Pane(newPlayer)
-		newPlayerGrid = new GridPane();
-		newPlayerGrid.setAlignment(Pos.CENTER);
-		newPlayerGrid.setHgap(5);
-		newPlayerGrid.setVgap(5);
-		newPlayerGrid.setPadding(new Insets(25,25,25,25));
-		newPlayerGrid.setStyle("-fx-background-image: url('boards//newPlayer.png');");
-		newPlayerScene = new Scene(newPlayerGrid, 400, 150);
-		newPlayerStage.setScene(newPlayerScene);
+		gridNewPlayer = new GridPane();
+		gridNewPlayer.setAlignment(Pos.CENTER);
+		gridNewPlayer.setHgap(5);
+		gridNewPlayer.setVgap(5);
+		gridNewPlayer.setPadding(new Insets(25,25,25,25));
+		gridNewPlayer.setStyle("-fx-background-image: url('boards//newPlayer.png');");
+		sceneNewPlayer = new Scene(gridNewPlayer, 400, 150);
+		newPlayerStage.setScene(sceneNewPlayer);
 		
 		
 		//Fuellen der Pane
 		actiontarget = new Text();
-		grid.add(actiontarget, 0, 16);
+		gridLogin.add(actiontarget, 0, 16);
 		
-		opponentIP = new Label("Enemy (IP):");
-		opponentIP.setTextFill(Color.WHITE);
-		grid.add(opponentIP, 0, 6);
-		
-		opponentTextField = new TextField();
-		grid.add(opponentTextField, 3, 6);
-		
-		serverName = new Label("Server (IP):");
-		serverName.setTextFill(Color.WHITE);
-		grid.add(serverName, 0, 7);
-		
-		serverTextField = new TextField();
-		grid.add(serverTextField, 3, 7);
+//		opponentIP = new Label("Enemy (IP):");
+//		opponentIP.setTextFill(Color.WHITE);
+//		grid.add(opponentIP, 0, 6);
+//		
+//		opponentTextField = new TextField();
+//		grid.add(opponentTextField, 3, 6);
+//		
+//		serverName = new Label("Server (IP):");
+//		serverName.setTextFill(Color.WHITE);
+//		grid.add(serverName, 0, 7);
+//		
+//		serverTextField = new TextField();
+//		grid.add(serverTextField, 3, 7);
 		
 		userName = new Label("User Name:");
 		userName.setTextFill(Color.WHITE);
-		grid.add(userName, 0, 14);
+		gridLogin.add(userName, 0, 6);
 		
 		userTextField = new TextField();
-		grid.add(userTextField, 3, 14);
+		gridLogin.add(userTextField, 3, 6, 2, 1);
 		
 		pw = new Label("Password:");
 		pw.setTextFill(Color.WHITE);
-		grid.add(pw, 0, 15);
+		gridLogin.add(pw, 0, 15);
 		
 		pwBox = new PasswordField();
-		grid.add(pwBox, 3, 15);
+		gridLogin.add(pwBox, 3, 15, 2, 1);
 			
-		btn = new Button("Sign in");
+		loginBtn = new Button("Login");
 		hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-		hbBtn.getChildren().add(btn);
-		grid.add(hbBtn, 3, 16);
+		hbBtn.getChildren().add(loginBtn);
+		gridLogin.add(hbBtn, 4, 16);
+		
+		signInBtn = new Button("Sign in");
+		hbBtn2 = new HBox(10);
+		hbBtn2.setAlignment(Pos.BOTTOM_LEFT);
+		hbBtn2.getChildren().add(signInBtn);
+		gridLogin.add(hbBtn2, 3, 16);
 		
 		//Fuellen der Pane(newPlayer)
 		l1=new Label("Hello there!");
@@ -110,27 +116,27 @@ public class Login extends LoginBasal
 		l3.setTextFill(Color.WHITE);
 		l4.setTextFill(Color.RED);
 		
-		newPlayerGrid.add(l1, 1, 0);
-		newPlayerGrid.add(l2, 0, 1, 3, 1);
-		newPlayerGrid.add(l3, 0, 2, 3, 1);
-		newPlayerGrid.add(l4, 1, 6);
+		gridNewPlayer.add(l1, 1, 0);
+		gridNewPlayer.add(l2, 0, 1, 3, 1);
+		gridNewPlayer.add(l3, 0, 2, 3, 1);
+		gridNewPlayer.add(l4, 1, 6);
 		
 		createBtn = new Button("Create");
-		newPlayerGrid.add(createBtn, 0, 6);
+		gridNewPlayer.add(createBtn, 0, 6);
 		
 		cancelBtn = new Button("Cancel");
-		newPlayerGrid.add(cancelBtn, 2, 6);
+		gridNewPlayer.add(cancelBtn, 2, 6);
 		
 		newPlayerName = new TextField();
 		newPlayerName.setPromptText("Your Name");
-		newPlayerGrid.add(newPlayerName, 0, 4);
+		gridNewPlayer.add(newPlayerName, 0, 4);
 		
 		newPlayerPW = new PasswordField();
 		newPlayerPW.setPromptText("Your Password");
-		newPlayerGrid.add(newPlayerPW, 1, 4);
+		gridNewPlayer.add(newPlayerPW, 1, 4);
 		
 		newPlayerPWConfirm = new PasswordField();
 		newPlayerPWConfirm.setPromptText("Confirm Password");
-		newPlayerGrid.add(newPlayerPWConfirm, 2, 4);
+		gridNewPlayer.add(newPlayerPWConfirm, 2, 4);
 	}
 }

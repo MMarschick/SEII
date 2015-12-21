@@ -24,8 +24,8 @@ public class GameSelect
 	private GridPane grid;
 	private Scene selectScene;
 	private Text actiontarget; 
-	private Label opponentIP;
-	private TextField opponentTextField;														  //userName: Beinhaltet die eigene IP
+//	private Label opponentIP;
+//	private TextField opponentTextField;														  //userName: Beinhaltet die eigene IP
 	private HBox hbBtn;
 	
 	//Getter-Methoden
@@ -65,7 +65,7 @@ public class GameSelect
 		grid.setVgap(10);
 		grid.setPadding(new Insets(25,25,25,25));
 		grid.setStyle("-fx-background-image: url('boards//battleSelect.png');");
-		selectScene = new Scene(grid, 400, 340);
+		selectScene = new Scene(grid, 380, 340);
 		selectStage.setScene(selectScene);
 		selectStage.setScene(selectScene);
 		
@@ -80,14 +80,14 @@ public class GameSelect
 		grid.add(hbBtn, 0, 15);
 		
 		openGames = new ComboBox<String>();
-		openGames.setPromptText("Select old Game");
+		openGames.setPromptText("Open Game");
 		openGames.setVisibleRowCount(5);
-		grid.add(openGames, 0, 0);
+		grid.add(openGames, 0, 0, 4, 1);
 		
-		logoutBtn = new Button("Sign out");
+		logoutBtn = new Button("Logout");
 		hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
 		hbBtn.getChildren().add(logoutBtn);
-		grid.add(hbBtn, 1, 15);
+		grid.add(hbBtn, 3, 15);
 	}
 }

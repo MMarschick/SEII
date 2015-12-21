@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import pieces.*;
+import stages.View;
 import tools.GameParser;
 import tools.RectTool;
 
@@ -25,6 +26,7 @@ public class Board extends BoardBasal
 	private ImageView icon;
 	private Image board;
 	private Pane pane = new Pane();
+	private BorderPane root;
 	
 	public static void setMyAlliance(String alliance)
 	{
@@ -44,6 +46,7 @@ public class Board extends BoardBasal
 	//Konstruktor; erstellt aus einem parseString ein Bord; fügt das Board-Icon der View hinzu
 	public Board(BorderPane root, String parseString)
 	{
+		this.root=root; 
 		
 		board = new Image("boards\\Board.png"); //Spielbrett
 		icon = new ImageView(board);
@@ -61,27 +64,37 @@ public class Board extends BoardBasal
 				{
 					//PieceViews
 					Piece currPiece=felder[i][j];
-					root.getChildren().add(currPiece.getIcon());
+					
+					// TODO Auto-generated method stub
+					//Rotation for opponent piece icon
+//					if(myAlliance!=currPiece.getCharacterAlliance())
+//					{
+//						//rotate
+//						currPiece.getIcon().setRotate(180);
+//						currPiece.getAvatarView().setRotate(180);
+//						currPiece.getSavageryView().setRotate(180);
+//					}
+					pane.getChildren().add(currPiece.getIcon());
 					
 					//AvatarViews
-					root.getChildren().add(currPiece.getAvatarView());
+					pane.getChildren().add(currPiece.getAvatarView());
 					
 					//SavageryViews
-					root.getChildren().add(currPiece.getSavageryView());
+					pane.getChildren().add(currPiece.getSavageryView());
 					
 					//PoisonViews
-					root.getChildren().add(currPiece.getPoisonView());
+					pane.getChildren().add(currPiece.getPoisonView());
 					
 					//TauntingViews
-					root.getChildren().add(currPiece.getTauntingView());
+					pane.getChildren().add(currPiece.getTauntingView());
 					
 					//FrozenViews
-					root.getChildren().add(currPiece.getFreezeView());
+					pane.getChildren().add(currPiece.getFreezeView());
 					
 					//HealthViews
-					root.getChildren().add(currPiece.getHealthView());
-					
+					pane.getChildren().add(currPiece.getHealthView());
 					pane.getChildren().add(currPiece.getHealthLabel());
+					
 					update();
 				}
 			}
@@ -94,7 +107,7 @@ public class Board extends BoardBasal
 			for (int j = 0; j < 9; j++) {
 				if (felder[i][j] != null) {
 					Piece currPiece = felder[i][j];
-					System.out.println("update " + i + " " + j);
+//					System.out.println("update " + i + " " + j);
 					currPiece.getIcon().setX(i * 50 + 5);
 					currPiece.getIcon().setY(j * 50 + 5);
 					currPiece.getAvatarView().setX(i * 50);
@@ -169,16 +182,16 @@ public class Board extends BoardBasal
 		switch(currP.getPieceT())
 		{
 		case PEASANT: 
-			if(currP.getCharacterAlliance()==Alliance.GOOD)
-			{
+//			if(currP.getCharacterAlliance()==Alliance.GOOD)
+//			{
 				if(inBoundary(x-1, y-1) && isEnemyPiece(x-1, y-1)) possibleTarget.add((x-1)*10+y-1);
 				if(inBoundary(x+1, y-1) && isEnemyPiece(x+1, y-1)) possibleTarget.add((x+1)*10+y-1);
-			}
-			else
-			{
-				if(inBoundary(x-1, y+1) && isEnemyPiece(x-1, y+1)) possibleTarget.add((x-1)*10+y+1);
-				if(inBoundary(x+1, y+1) && isEnemyPiece(x+1, y+1)) possibleTarget.add((x+1)*10+y+1);
-			}
+//			}
+//			else
+//			{
+//				if(inBoundary(x-1, y+1) && isEnemyPiece(x-1, y+1)) possibleTarget.add((x-1)*10+y+1);
+//				if(inBoundary(x+1, y+1) && isEnemyPiece(x+1, y+1)) possibleTarget.add((x+1)*10+y+1);
+//			}
 			break;
 		case ARCHER:
 			for(int i=-3;i<4;i++)
@@ -422,10 +435,10 @@ public class Board extends BoardBasal
 	//Unterfunktion zur Berechnung der Ziele/Bewegungsmöglichkeiten des Peasant-Pieces
 	private void getPeasant(int x, int y, ArrayList<Integer> possibleMove, ArrayList<Integer> possibleTarget, PieceType pieceT)
 	{
-		Alliance all=getPiece(x,y).getCharacterAlliance();
+//		Alliance all=getPiece(x,y).getCharacterAlliance();
 
-		if(all==Alliance.GOOD)
-		{
+//		if(all==Alliance.GOOD)
+//		{
 			if(inBoundary(x, y-1) && !isPiece(x, y-1))
 			{
 				possibleMove.add((x*10)+(y-1));
@@ -442,26 +455,26 @@ public class Board extends BoardBasal
 					possibleMove.add((x*10)+(y-2));
 				}
 			}
-		}
-		else
-		{
-			if(inBoundary(x, y+1) && !isPiece(x, y+1))
-			{
-				possibleMove.add((x*10)+(y+1));
-			}
-			else
-			{
-				//figurentausch am brettende
-				return;
-			}
-			if(y==1)
-			{
-				if(!isPiece(x, y+2))
-				{
-					possibleMove.add((x*10)+(y+2));
-				}
-			}
-		}
+//		}
+//		else
+//		{
+//			if(inBoundary(x, y+1) && !isPiece(x, y+1))
+//			{
+//				possibleMove.add((x*10)+(y+1));
+//			}
+//			else
+//			{
+//				//figurentausch am brettende
+//				return;
+//			}
+//			if(y==1)
+//			{
+//				if(!isPiece(x, y+2))
+//				{
+//					possibleMove.add((x*10)+(y+2));
+//				}
+//			}
+//		}
 		
 	}
 	
@@ -479,10 +492,11 @@ public class Board extends BoardBasal
 		TurnHandling.switchWhoseTurn();
 		if(player.synchGame())
 		{
-			Game.waitTurn(player);
-			felder = new Piece[9][9];
-			GameParser.parseBoard(player.getGame(), felder);
-			update();
+//			Game.waitTurn(player);
+//			//new Board
+			buildNewBoard(player);
+			// TODO Auto-generated method stub
+			waiting(player);
 		}
 		else
 		{
@@ -490,6 +504,20 @@ public class Board extends BoardBasal
 		}
 	//Alle Pieces aktualisieren:
 	//check death; Statuseffekte; remaining duration; trigger effekt; check death again
+	}
+	public void buildNewBoard(Client player)
+	{
+		pane.getChildren().clear();
+		felder = new Piece[9][9];
+		Board nBoard = new Board(root, player.getGame());
+		View.setEventBoards(nBoard);
+		update();
+	}
+	
+	// TODO Auto-generated method stub
+	private void waiting(Client player)
+	{
+		
 	}
 	
 	

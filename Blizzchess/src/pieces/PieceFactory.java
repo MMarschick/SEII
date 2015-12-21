@@ -40,6 +40,10 @@ public class PieceFactory
 	//Erstellt ein Piece nach den übergebenen Daten und gibt es zurück
 	public Piece getPiece(PieceType pieceType, Alliance characterAlliance, int health, int abilityCooldown, ObservableList<StatusEffect> statusEffects)
 	{
+		// TODO Auto-generated method stub
+		//Sound-Arrays hinzufuegen; doppelt?
+		//Death, Ready, Ability, Pissed[], YesAttack[], Yes[], What[]
+		
 		String imagePath="";
 		switch(characterAlliance)
 		{

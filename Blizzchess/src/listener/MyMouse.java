@@ -44,7 +44,6 @@ public class MyMouse implements EventHandler<MouseEvent>
 	{
 		View.setxT((int)(event.getX()-board.getIcon().getX())/50);
 		View.setyT((int)(event.getY()-board.getIcon().getY())/50);
-		board.update();
 
 		if(board.isPiece(View.getxT(), View.getyT())) //befuellen, wenn piece
 		{
@@ -62,10 +61,17 @@ public class MyMouse implements EventHandler<MouseEvent>
 			try {handleTurn(board, me);} 
 			catch (InterruptedException e) {e.printStackTrace();}
 		}
+		// TODO Auto-generated method stub
 		else
 		{
-			try {Game.waitTurn(player);} 
-			catch (InterruptedException e) {e.printStackTrace();}
+//			try {Game.waitTurn(player);}
+			try {
+				if(player.waitingTurn()) 
+					{
+						TurnHandling.switchWhoseTurn();
+						board.buildNewBoard(player);
+					}
+			}catch (Exception e) {e.printStackTrace();}
 		}
 	}
 	

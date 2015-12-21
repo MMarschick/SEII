@@ -14,10 +14,10 @@ import tools.RectTool;
 
 public abstract class LoginBasal 
 {
-	protected Button btn;                   //btn: Button fuer die Ausloesung des Logins
+	protected Button loginBtn, signInBtn;                   //btn: Button fuer die Ausloesung des Logins
 	protected Stage loginStage, newPlayerStage;
-	protected GridPane grid, newPlayerGrid;
-	protected Scene sceneLogin, newPlayerScene;
+	protected GridPane gridLogin, gridNewPlayer;
+	protected Scene sceneLogin, sceneNewPlayer;
 
 	//newPlayer
 	protected Label l1,l2,l3, l4;
@@ -33,11 +33,12 @@ public abstract class LoginBasal
 	 														  //serverName: Beinhaltet IP des Servers
 															  //userName: Beinhaltet die eigene IP
 	protected PasswordField pwBox;		  //pwBox: Beinhaltet das Password des Users
-	protected HBox hbBtn;
+	protected HBox hbBtn, hbBtn2;
 	
 	//Getter-Methoden
-	public Button getBtn(){return btn;}
+	public Button getLoginBtn(){return loginBtn;}
 	public HBox getHbBtn(){return hbBtn;}
+	public Button getSignInBtn(){return signInBtn;}
 	public PasswordField getPwBox(){return pwBox;}
 	public Text getActiontarget(){return actiontarget;}
 	public TextField getUserTextField(){return userTextField;}

@@ -81,7 +81,12 @@ public class GameParser
 			{
 				if((currPiece=felder[x][y])!=null)
 				{
-					parseString+="~"+x+"-"+y+"-";
+					// TODO Auto-generated method stub
+					//Hinzugefuegt fuer Dreh-Test
+					int yE = y;
+					if(Board.getMyAlliance()==Alliance.EVIL){if(y!=4) yE=8-y;}
+					parseString+="~"+x+"-"+yE+"-";
+					
 					parseString+=parsePiece(currPiece);
 				}
 			}	
@@ -100,6 +105,11 @@ public class GameParser
 				String[] attributes=pieceString.split(Pattern.quote("-"));
 				int xk=Integer.parseInt(attributes[0]);
 				int yk=Integer.parseInt(attributes[1]);
+				
+				// TODO Auto-generated method stub
+				//Hinzugefuegt fuer Dreh-Test
+				if(Board.getMyAlliance()==Alliance.EVIL){if(yk!=4) yk=8-yk;}
+				
 				PieceType pt=null;
 				switch(attributes[2])
 				{

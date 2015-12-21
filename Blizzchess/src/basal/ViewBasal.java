@@ -100,7 +100,10 @@ public abstract class ViewBasal extends Application
 //		primaryStage.maximizedProperty().addListener(changeEvent);
 		
 		//EventHandler: wenn Login-Button betätigt wird
-		login.getBtn().setOnAction(actionEvent);
+		login.getLoginBtn().setOnAction(actionEvent);
+		
+		//Event sign in
+		login.getSignInBtn().setOnAction(actionEvent);
 		
 		//Event create player
 		login.getCreateBtn().setOnAction(actionEvent);
