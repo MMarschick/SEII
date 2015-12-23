@@ -94,9 +94,53 @@ public class Piece
 		}
 	}
 	
-	public void attack() {
-		health=health-getPieceT().getAttackValue();
+	public void flushStatusEffects()
+	{
+//		System.out.println("lets flush "+obsStatusEffects.size()+" statuseffects");
+		for(int i=0;i<obsStatusEffects.size();i++)
+		{
+			StatusEffect sEffect=obsStatusEffects.get(i);
+			if(sEffect.getRemainingDuration()>1)
+			{
+				switch(sEffect.getAbility())
+				{
+				case POISON: health-=sEffect.getAbility().getDamage();
+				default: sEffect.diminishRemainingDurationByOne(); break;
+				}
+			}
+			else
+			{
+				switch(sEffect.getAbility())
+				{
+				case POISON: health-=sEffect.getAbility().getDamage(); break;
+				case AVATAR: if(this.health>this.getPieceT().getMaxHealth())this.health=this.getPieceT().getMaxHealth();
+				}
+				System.out.println(sEffect.getAbility().getStatusName());
+				obsStatusEffects.remove(i--);
+			}
+		}
 	}
+
+public void attack(Piece attackingPiece) {
+		int dmg=attackingPiece.getPieceT().getAttackValue();
+		if(attackingPiece.checkForStatusEffect(Ability.SAVAGERY))dmg+=Ability.SAVAGERY.getDamage();
+		health=health-dmg;
+		if(health<0)health=0;
+	}
+
+public boolean checkForStatusEffect(Ability status)
+	{
+		boolean contains=false;
+		for(StatusEffect sEffect : this.statusEffects)
+		{
+			if(sEffect.getAbility()==status)
+			{
+				contains=true;
+			}
+		}
+		return contains;
+	}
+
 
 	//Getter
 	public ImageView getIcon(){return icon;}
@@ -105,7 +149,7 @@ public class Piece
 	public Alliance getCharacterAlliance(){return characterAlliance;}
 	public int getHealth() {return health;}
 	public int getAbilityCooldown() {return abilityCooldown;}
-	public ObservableList<StatusEffect> getStatusEffects() {return obsStatusEffects;}
+	public ObservableList<StatusEffect> getObsStatusEffects() {return obsStatusEffects;}
 	public Image getPiece() {return piece;}
 	public ImageView getFreezeView() {return freezeView;}
 	public ImageView getPoisonView() {return poisonView;}

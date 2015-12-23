@@ -486,24 +486,70 @@ public class Board extends BoardBasal
 		else return false;
 	}
 
-	
-	public void flush(Client player) throws InterruptedException 
+	public void updateBoard()
 	{
+//		System.out.println(GameParser.parseString(this));
+		for(int i=0;i<9;i++)
+		{
+			for(int j=0;j<9;j++)
+			{
+				if (isPiece(i, j)) 
+				{
+					getPiece(i, j).flushStatusEffects();
+					if (getPiece(i, j).getHealth() < 1)
+						felder[i][j] = null;
+					update();
+				}
+			}
+		}
+//		System.out.println(GameParser.parseString(this));
+	}
+
+	public boolean checkTargetsForTaunts()
+	{
+		boolean tauntsFound=false;
+		ArrayList<Integer> tauntTargets=new ArrayList<Integer>();
+		for(int i=-1;i<2;i++)
+		{
+			for(int j=-1;j<2;j++)
+			{
+				if(inBoundary(i, j) && isPiece(i, j))
+				{
+					if(felder[i][j].checkForStatusEffect(Ability.TAUNT))
+					{
+						tauntTargets.add(10*i+j);
+						tauntsFound=true;
+						break;
+					}
+				}
+			}
+		}
+		if(!tauntTargets.isEmpty())
+		{
+			this.possibleTarget=tauntTargets;
+		}
+		return tauntsFound;
+	}
+
+	public void checkTargetsAndMovementsForTaunts()
+	{
+		if(this.checkTargetsForTaunts()) this.possibleMove=new ArrayList<Integer>();
+	}
+	
+	public void flush(Client player, Board board) throws InterruptedException 
+	{
+		updateBoard();
+		player.synchBoard(GameParser.parseString(board));
 		TurnHandling.switchWhoseTurn();
 		if(player.synchGame())
 		{
-//			Game.waitTurn(player);
-//			//new Board
 			buildNewBoard(player);
-			// TODO Auto-generated method stub
 			waiting(player);
 		}
 		else
 		{
 			System.out.println("Turn nicht gewechselt");
 		}
-	//Alle Pieces aktualisieren:
-	//check death; Statuseffekte; remaining duration; trigger effekt; check death again
 	}
 	public void buildNewBoard(Client player)
 	{

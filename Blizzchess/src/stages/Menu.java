@@ -13,12 +13,19 @@ public class Menu {
 	private Stage menuStage;
 	private BorderPane border;
 	private Scene menuScene;
-	private Button btn;
-	private ImageView endTurn;
+	private ImageView endTurn, updateTurn;
+	private Image updateGray;
+	private Image updateGreen;
 	private Image yellow;
 	private Image green;
 	private Image enemy;
 
+	public ImageView getUpdateTurn(){return updateTurn;}
+	public void setUpdateTurnMine(){updateTurn.setImage(updateGreen);}
+	public void setUpdateTurnOpponent(){updateTurn.setImage(updateGray);}
+//	public Image getUpdateGray(){return updateGray;}
+//	public Image getUpdateGreen()
+	
 	public Menu() {
 		// Definierung der Stage
 		menuStage = new Stage();
@@ -30,6 +37,12 @@ public class Menu {
 		border.setStyle("-fx-background-color: #C0C0C0;");
 		menuScene = new Scene(border, 450, 60);
 		menuStage.setScene(menuScene);
+		
+		updateGray = new Image("boards\\endTurn_enemy.png");
+		updateGreen = new Image("boards\\endTurn_green.png");
+		
+		updateTurn = new ImageView(updateGray);
+		border.setLeft(updateTurn);
 		
 		yellow = new Image("boards\\endTurn_yellow.png");
 		green = new Image("boards\\endTurn_green.png");
@@ -57,9 +70,6 @@ public class Menu {
 		}
 	}
 
-	// Getter
-	public Button getBtn() {return btn;}
-	
 	//Setter	
 	public void setPosition(Stage stage){
 		menuStage.setX((int) stage.getX()+3);

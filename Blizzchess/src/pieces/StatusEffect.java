@@ -19,6 +19,11 @@ public class StatusEffect
 		this.ability=ability;
 		this.remainingDuration=remainingDuration;
 	}
+	
+	public void diminishRemainingDurationByOne()
+	{
+		remainingDuration--;
+	}
 
 	//Getter
 	public Ability getAbility(){return ability;}

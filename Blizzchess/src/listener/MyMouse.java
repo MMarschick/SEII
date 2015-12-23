@@ -8,21 +8,24 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import pieces.Alliance;
 import stages.Info;
+import stages.Menu;
 import stages.View;
 
 public class MyMouse implements EventHandler<MouseEvent>
 {	
 	private static Board board;
 	private Info info;
+	private Menu menu;
 	private TurnHandling turn;
 	private Client player;
 	
 	public static void setBoard(Board board){MyMouse.board = board;}
 
-	public MyMouse(Board board, Info info, TurnHandling turn, Client player)
+	public MyMouse(Board board, Info info, Menu menu, TurnHandling turn, Client player)
 	{
 		MyMouse.board=board;
 		this.info=info;
+		this.menu=menu;
 		this.turn=turn;
 		this.player=player;
 	}
@@ -35,7 +38,8 @@ public class MyMouse implements EventHandler<MouseEvent>
 			updateInfo(me);
 			break;
 		case "MOUSE_PRESSED":
-			turnExecution(me);
+			if(me.getSource().getClass().toString().endsWith("ImageView")){getTurn();}
+			else{turnExecution(me);System.out.println("handle turn");}
 			break;
 		}
 	}
@@ -51,7 +55,20 @@ public class MyMouse implements EventHandler<MouseEvent>
 			info.showInfo(board.getPiece(View.getxT(), View.getyT()));
 		}
 	}
-
+	
+	private void getTurn()
+	{
+		try {
+			if(player.waitingTurn()) 
+				{
+					TurnHandling.switchWhoseTurn();
+					board.buildNewBoard(player);
+				}
+		}catch (Exception e) {e.printStackTrace();}
+		if(TurnHandling.whoseTurn == Board.getMyAlliance()){menu.setUpdateTurnMine();}
+		else{menu.setUpdateTurnOpponent();}
+	}
+	
 	private void turnExecution(MouseEvent me) 
 	{
 		// TODO Auto-generated method stub
@@ -62,17 +79,17 @@ public class MyMouse implements EventHandler<MouseEvent>
 			catch (InterruptedException e) {e.printStackTrace();}
 		}
 		// TODO Auto-generated method stub
-		else
-		{
-//			try {Game.waitTurn(player);}
-			try {
-				if(player.waitingTurn()) 
-					{
-						TurnHandling.switchWhoseTurn();
-						board.buildNewBoard(player);
-					}
-			}catch (Exception e) {e.printStackTrace();}
-		}
+//		else
+//		{
+////			try {Game.waitTurn(player);}
+//			try {
+//				if(player.waitingTurn()) 
+//					{
+//						TurnHandling.switchWhoseTurn();
+//						board.buildNewBoard(player);
+//					}
+//			}catch (Exception e) {e.printStackTrace();}
+//		}
 	}
 	
 	private void handleTurn(Board board, MouseEvent event) throws InterruptedException 

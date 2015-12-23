@@ -103,6 +103,8 @@ public class TurnHandling
 				if (possibleTarget.isEmpty()) {
 					red.clearRect();
 					turnState.setValue(0);
+					try{board.flush(player, board);}
+					catch(InterruptedException e){e.printStackTrace();}
 					break;
 				}
 				red.clearRect();
@@ -119,8 +121,10 @@ public class TurnHandling
 				red.clearRect();
 
 				// attacke
-				board.getPiece(View.getxNew(),View.getyNew()).attack();
+				board.getPiece(View.getxNew(),View.getyNew()).attack(board.getPiece(View.getX(), View.getY()));
 				turnState.setValue(0);
+				try {board.flush(player, board);} 
+				catch (InterruptedException e) {e.printStackTrace();}
 //				board.update(View.getxNew(),View.getyNew(), board.getPiece(View.getxNew(),View.getyNew()));
 			}
 		}
@@ -149,7 +153,7 @@ public class TurnHandling
 		for (Integer targetInt : possibleTarget) {
 			if (koordInt == targetInt) {
 				// attacke
-				board.getPiece(View.getxNew(),View.getyNew()).attack();
+				board.getPiece(View.getxNew(),View.getyNew()).attack(board.getPiece(View.getX(), View.getY()));
 				board.getPiece(View.getxNew(),View.getyNew()).setHealthLabel(board.getPiece(View.getxNew(),View.getyNew()).getHealth());
 				turnState.setValue(0);
 //				if (whoseTurn == Alliance.GOOD)
@@ -158,8 +162,8 @@ public class TurnHandling
 //					whoseTurn = Alliance.GOOD;
 				red.clearRect();
 				try {
-					player.synchBoard(GameParser.parseString(board));
-					board.flush(player);} 
+//					player.synchBoard(GameParser.parseString(board));
+					board.flush(player, board);} 
 				catch (InterruptedException e) {e.printStackTrace();}
 				System.out.println("case 2");
 			}

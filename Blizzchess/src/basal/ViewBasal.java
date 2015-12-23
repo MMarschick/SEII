@@ -76,7 +76,7 @@ public abstract class ViewBasal extends Application
 	{
 		actionEvent = new MyAction(primaryStage, root, board, login, menu, info, gameSelect, player);
 		changeEvent = new MyChange(primaryStage, menu, info);
-		mouseEvent = new MyMouse(board, info, turn, player);
+		mouseEvent = new MyMouse(board, info, menu, turn, player);
 		windowEvent = new MyWindow(menu, info, player);
 		
 		//wird Hauptstage verschoben, verschieben sich beide Leisten entsprechend mit
@@ -119,5 +119,8 @@ public abstract class ViewBasal extends Application
 		
 		//Event catch open games
 		gameSelect.getOpenGames().setOnAction(actionEvent);
+		
+		//Event update Turn
+		menu.getUpdateTurn().setOnMousePressed(mouseEvent);
 	}
 }

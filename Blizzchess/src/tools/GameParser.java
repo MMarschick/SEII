@@ -2,6 +2,7 @@ package tools;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import javafx.collections.FXCollections;
@@ -29,6 +30,17 @@ public class GameParser
 			+ "~6-0-a-e-3-0-s_3~6-1-p-e-2-0-~6-7-p-g-2-0-~6-8-a-g-3-0-"
 			+ "~7-0-n-e-3-0-~7-1-p-e-2-0-~7-7-p-g-2-0-~7-8-n-g-3-0-"
 			+ "~8-0-t-e-6-0-~8-1-p-e-2-0-~8-7-p-g-2-0-~8-8-t-g-6-0-";
+		
+
+//			+ "~0-0-t-e-6-0-~0-1-p-e-2-0-~0-7-p-g-2-0-~0-8-t-g-6-0-"
+//			+ "~1-0-n-e-3-0-~1-1-p-e-2-0-~1-7-p-g-2-0-~1-8-n-g-3-0-"
+//			+ "~2-0-a-e-3-0-~2-1-p-e-2-0-~2-7-p-g-2-0-~2-8-a-g-3-0-"
+//			+ "~3-0-q-e-4-0-~3-1-p-e-2-0-~3-7-p-g-2-0-~3-8-q-g-4-0-"
+//			+ "~4-0-k-e-10-0-~4-1-p-e-2-0-~4-7-p-g-2-0-~4-8-k-g-10-0-"
+//			+ "~5-0-s-e-3-0-~5-1-p-e-2-0-~5-7-p-g-2-0-~5-8-s-g-3-0-"
+//			+ "~6-0-a-e-3-0-~6-1-p-e-2-0-~6-7-p-g-2-0-~6-8-a-g-3-0-"
+//			+ "~7-0-n-e-3-0-~7-1-p-e-2-0-~7-7-p-g-2-0-~7-8-n-g-3-0-"
+//			+ "~8-0-t-e-6-0-~8-1-p-e-2-0-~8-7-p-g-2-0-~8-8-t-g-6-0-";
 
 	public static String parsePiece(Piece currPiece)
 	{
@@ -52,17 +64,18 @@ public class GameParser
 		parseString+="-"+currPiece.getHealth();
 		parseString+="-"+currPiece.getAbilityCooldown();
 		parseString+="-";
-		if(!(currPiece.getStatusEffects().isEmpty()))
+		if(!(currPiece.getObsStatusEffects().isEmpty()))
 		{
-			for(StatusEffect se : currPiece.getStatusEffects())
+			System.out.println(currPiece.getObsStatusEffects().size());
+			for(StatusEffect se : currPiece.getObsStatusEffects())
 			{
 				switch(se.getAbility())
 				{
 				case POISON: parseString+="p"+"_"+se.getRemainingDuration();break;
-				case FREEZE: parseString+="f"+"_"+se.getRemainingDuration();
-				case AVATAR: parseString+="a"+"_"+se.getRemainingDuration();
-				case TAUNT: parseString+="t"+"_"+se.getRemainingDuration();
-				case SAVAGERY: parseString+="s"+"_"+se.getRemainingDuration();
+				case FREEZE: parseString+="f"+"_"+se.getRemainingDuration();break;
+				case AVATAR: parseString+="a"+"_"+se.getRemainingDuration();break;
+				case TAUNT: parseString+="t"+"_"+se.getRemainingDuration();break;
+				case SAVAGERY: parseString+="s"+"_"+se.getRemainingDuration();break;
 				}
 				parseString+="+";
 			}
@@ -86,7 +99,6 @@ public class GameParser
 					int yE = y;
 					if(Board.getMyAlliance()==Alliance.EVIL){if(y!=4) yE=8-y;}
 					parseString+="~"+x+"-"+yE+"-";
-					
 					parseString+=parsePiece(currPiece);
 				}
 			}	
@@ -105,11 +117,9 @@ public class GameParser
 				String[] attributes=pieceString.split(Pattern.quote("-"));
 				int xk=Integer.parseInt(attributes[0]);
 				int yk=Integer.parseInt(attributes[1]);
-				
 				// TODO Auto-generated method stub
 				//Hinzugefuegt fuer Dreh-Test
 				if(Board.getMyAlliance()==Alliance.EVIL){if(yk!=4) yk=8-yk;}
-				
 				PieceType pt=null;
 				switch(attributes[2])
 				{
@@ -133,6 +143,7 @@ public class GameParser
 				ObservableList<StatusEffect> obsStatusEffects=FXCollections.observableList(statusEffects);
 				if(attributes.length>6)
 				{
+					System.out.println(Arrays.toString(attributes));
 					String[] effectList=attributes[6].split(Pattern.quote("+"));
 					for(int si=0;si<effectList.length;si++)
 					{
@@ -146,13 +157,16 @@ public class GameParser
 						case "t": obsStatusEffects.add(new StatusEffect(Ability.TAUNT, remainingDuration));break;
 						case "s": obsStatusEffects.add(new StatusEffect(Ability.SAVAGERY, remainingDuration));break;
 						}
-						// (.Y.)
-
 					}
 				}
 				PieceFactory pf=new PieceFactory();
+				for(StatusEffect se : obsStatusEffects)
+				{
+					System.out.println(se.getAbility().getStatusName());
+				}
 				felder[xk][yk]=pf.getPiece(pt, characterAlliance, health, abilityCooldown, obsStatusEffects);
 			}
 		}
+		
 	}
 }
